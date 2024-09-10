@@ -2932,59 +2932,56 @@ SRV_CALL_TIMEOUT = 30
 
 
 # """ Gripper Service Client Test Class """
-class TestDsrGripperCli(unittest.TestCase):
-	@classmethod
-	def setUpClass(cls):
-		# Start prerequisite launch scripts
-		cls.bringup_script = subprocess.Popen([ # how to align RAII?
-			"ros2", "launch", "dsr_tests",
-			"dsr_bringup_without_spawner_test.launch.py",
-			"mode:=virtual",
-			"name:={}".format(NAMESPACE),
-			"port:=25125"
-			],
-			stdout=subprocess.PIPE,
-			stderr=subprocess.STDOUT,
-			universal_newlines=True
-		)
-		time.sleep(5)
+# class TestDsrGripperCli(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(cls):
+# 		# Start prerequisite launch scripts
+# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_bringup_without_spawner_test.launch.py",
+# 			"mode:=virtual",
+# 			"name:={}".format(NAMESPACE),
+# 			"port:=25125"
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		time.sleep(5)
 
-		cls.spawner_script = subprocess.Popen([
-			"ros2", "launch", "dsr_tests",
-			"dsr_spawner_cli_test.launch.py",
-			"name:={}".format(NAMESPACE)
-			],
-			stdout=subprocess.PIPE,
-			stderr=subprocess.STDOUT,
-			universal_newlines=True
-		)
-		cls._lock = threading.Lock()
+# 		cls.spawner_script = subprocess.Popen([
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_spawner_cli_test.launch.py",
+# 			"name:={}".format(NAMESPACE)
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		cls._lock = threading.Lock()
 
-		# Assume if spawners are successfully loaded, Prerequisite done.
-		try:
-			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
-			if 2 != stdout.count('\033[92m'+"Configured and activated"):
-				cls.bringup_script.send_signal(signal.SIGINT)
-				cls.spawner_script.send_signal(signal.SIGINT)
-				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
-		except subprocess.TimeoutExpired as e:
-			cls.bringup_script.send_signal(signal.SIGINT)
-			cls.spawner_script.send_signal(signal.SIGINT)
-			raise Exception('Spawner Time out !!')
+# 		# Assume if spawners are successfully loaded, Prerequisite done.
+# 		try:
+# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+# 				cls.bringup_script.send_signal(signal.SIGINT)
+# 				cls.spawner_script.send_signal(signal.SIGINT)
+# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+# 		except subprocess.TimeoutExpired as e:
+# 			cls.bringup_script.send_signal(signal.SIGINT)
+# 			cls.spawner_script.send_signal(signal.SIGINT)
+# 			raise Exception('Spawner Time out !!')
 
-		rclpy.init()
-		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
-		time.sleep(5)
+# 		rclpy.init()
+# 		cls.node =rclpy.create_node("dsr_gripper_test_node", namespace=NAMESPACE)
+# 		time.sleep(5)
 
-	@classmethod
-	def tearDownClass(cls):
-		# Terminate Launch scripts
-		cls.bringup_script.send_signal(signal.SIGINT)
-		cls.spawner_script.send_signal(signal.SIGINT)
-		rclpy.shutdown()
-	
-
-	
+# 	@classmethod
+# 	def tearDownClass(cls):
+# 		# Terminate Launch scripts
+# 		cls.bringup_script.send_signal(signal.SIGINT)
+# 		cls.spawner_script.send_signal(signal.SIGINT)
+# 		rclpy.shutdown()
 
 
 # """ IO Control Service Client Test Class """
@@ -3029,7 +3026,7 @@ class TestDsrGripperCli(unittest.TestCase):
 # 			raise Exception('Spawner Time out !!')
 
 # 		rclpy.init()
-# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+# 		cls.node =rclpy.create_node("dsr_io_test_node", namespace=NAMESPACE)
 # 		time.sleep(5)
 
 # 	@classmethod
@@ -3039,177 +3036,177 @@ class TestDsrGripperCli(unittest.TestCase):
 # 		cls.spawner_script.send_signal(signal.SIGINT)
 # 		rclpy.shutdown()
 
-	## Set Control Box Analog Input Type
-	# def test_set_ctrl_box_analog_input_type_cli(self):
-	# 	""" Set Control Box Analog Input Type """
-	# 	set_crtl_box_analog_input_type_cli = self.node.create_client(SetCtrlBoxAnalogInputType, "io/set_ctrl_box_analog_input_type")
-	# 	set_crtl_box_analog_input_type_req = SetCtrlBoxAnalogInputType.Request()
-	# 	set_crtl_box_analog_input_type_req.channel = 1
-	# 	set_crtl_box_analog_input_type_req.mode = 0
-	# 	set_crtl_box_analog_input_type_future = set_crtl_box_analog_input_type_cli.call_async(set_crtl_box_analog_input_type_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_crtl_box_analog_input_type_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_crtl_box_analog_input_type_future.done(), "io/set_ctrl_box_analog_input_type service working is not done.")
-	# 	set_crtl_box_analog_input_type_resp = set_crtl_box_analog_input_type_future.result()
-	# 	self.assertTrue(set_crtl_box_analog_input_type_resp.success == True, "io/set_ctrl_box_analog_input_type service is not working correctly.")
-	# 	self.node.destroy_client(set_crtl_box_analog_input_type_cli)
+# 	# Set Control Box Analog Input Type
+# 	def test_set_ctrl_box_analog_input_type_cli(self):
+# 		""" Set Control Box Analog Input Type """
+# 		set_crtl_box_analog_input_type_cli = self.node.create_client(SetCtrlBoxAnalogInputType, "io/set_ctrl_box_analog_input_type")
+# 		set_crtl_box_analog_input_type_req = SetCtrlBoxAnalogInputType.Request()
+# 		set_crtl_box_analog_input_type_req.channel = 1
+# 		set_crtl_box_analog_input_type_req.mode = 0
+# 		set_crtl_box_analog_input_type_future = set_crtl_box_analog_input_type_cli.call_async(set_crtl_box_analog_input_type_req)
+# 		rclpy.spin_until_future_complete(self.node, set_crtl_box_analog_input_type_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(set_crtl_box_analog_input_type_future.done(), "io/set_ctrl_box_analog_input_type service working is not done.")
+# 		set_crtl_box_analog_input_type_resp = set_crtl_box_analog_input_type_future.result()
+# 		self.assertTrue(set_crtl_box_analog_input_type_resp.success == True, "io/set_ctrl_box_analog_input_type service is not working correctly.")
+# 		self.node.destroy_client(set_crtl_box_analog_input_type_cli)
 
 
-	## Get Control Box Analog Input
-	# def test_get_ctrl_box_analog_input_cli(self):
-	# 	""" Set Control Box Analog Input Type """
-	# 	set_crtl_box_analog_input_type_cli = self.node.create_client(SetCtrlBoxAnalogInputType, "io/set_ctrl_box_analog_input_type")
-	# 	set_crtl_box_analog_input_type_req = SetCtrlBoxAnalogInputType.Request()
-	# 	set_crtl_box_analog_input_type_req.channel = 1
-	# 	set_crtl_box_analog_input_type_req.mode = 0
-	# 	set_crtl_box_analog_input_type_future = set_crtl_box_analog_input_type_cli.call_async(set_crtl_box_analog_input_type_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_crtl_box_analog_input_type_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_crtl_box_analog_input_type_future.done(), "io/set_ctrl_box_analog_input_type service working is not done.")
-	# 	set_crtl_box_analog_input_type_resp = set_crtl_box_analog_input_type_future.result()
-	# 	self.assertTrue(set_crtl_box_analog_input_type_resp.success == True, "io/set_ctrl_box_analog_input_type service is not working correctly.")
-	# 	self.node.destroy_client(set_crtl_box_analog_input_type_cli)
+# 	# Get Control Box Analog Input
+# 	def test_get_ctrl_box_analog_input_cli(self):
+# 		""" Set Control Box Analog Input Type """
+# 		set_crtl_box_analog_input_type_cli = self.node.create_client(SetCtrlBoxAnalogInputType, "io/set_ctrl_box_analog_input_type")
+# 		set_crtl_box_analog_input_type_req = SetCtrlBoxAnalogInputType.Request()
+# 		set_crtl_box_analog_input_type_req.channel = 1
+# 		set_crtl_box_analog_input_type_req.mode = 0
+# 		set_crtl_box_analog_input_type_future = set_crtl_box_analog_input_type_cli.call_async(set_crtl_box_analog_input_type_req)
+# 		rclpy.spin_until_future_complete(self.node, set_crtl_box_analog_input_type_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(set_crtl_box_analog_input_type_future.done(), "io/set_ctrl_box_analog_input_type service working is not done.")
+# 		set_crtl_box_analog_input_type_resp = set_crtl_box_analog_input_type_future.result()
+# 		self.assertTrue(set_crtl_box_analog_input_type_resp.success == True, "io/set_ctrl_box_analog_input_type service is not working correctly.")
+# 		self.node.destroy_client(set_crtl_box_analog_input_type_cli)
 
-	# 	time.sleep(5)
+# 		time.sleep(5)
 
-	# 	""" Get Control Box Analog Input """
-	# 	get_crtl_box_analog_input_cli = self.node.create_client(GetCtrlBoxAnalogInput, "io/get_ctrl_box_analog_input")
-	# 	get_crtl_box_analog_input_req = GetCtrlBoxAnalogInput.Request()
-	# 	get_crtl_box_analog_input_req.channel = 1
-	# 	get_crtl_box_analog_input_future = get_crtl_box_analog_input_cli.call_async(get_crtl_box_analog_input_req)
-	# 	rclpy.spin_until_future_complete(self.node, get_crtl_box_analog_input_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_crtl_box_analog_input_future.done(), "io/get_ctrl_box_analog_input service working is not done.")
-	# 	get_crtl_box_analog_input_resp = get_crtl_box_analog_input_future.result()
-	# 	self.assertTrue(get_crtl_box_analog_input_resp.success == True, "io/get_ctrl_box_analog_input service is not working correctly.")
-	# 	self.node.destroy_client(get_crtl_box_analog_input_cli)
-
-
-	## Set Control Box Analog Output Type Test
-	# def test_set_ctrl_box_analog_output_type_cli(self):
-	# 	""" Set Control Box Analog Output Type """
-	# 	set_crtl_box_analog_output_type_cli = self.node.create_client(SetCtrlBoxAnalogOutputType, "io/set_ctrl_box_analog_output_type")
-	# 	set_crtl_box_analog_output_type_req = SetCtrlBoxAnalogOutputType.Request()
-	# 	set_crtl_box_analog_output_type_req.channel = 1
-	# 	set_crtl_box_analog_output_type_req.mode = 0
-	# 	set_crtl_box_analog_output_type_future = set_crtl_box_analog_output_type_cli.call_async(set_crtl_box_analog_output_type_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_crtl_box_analog_output_type_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_crtl_box_analog_output_type_future.done(), "io/set_ctrl_box_analog_output_type service working is not done.")
-	# 	set_crtl_box_analog_output_type_resp = set_crtl_box_analog_output_type_future.result()
-	# 	self.assertTrue(set_crtl_box_analog_output_type_resp.success == True, "io/set_ctrl_box_analog_output_type service is not working correctly.")
-	# 	self.node.destroy_client(set_crtl_box_analog_output_type_cli)
+# 		""" Get Control Box Analog Input """
+# 		get_crtl_box_analog_input_cli = self.node.create_client(GetCtrlBoxAnalogInput, "io/get_ctrl_box_analog_input")
+# 		get_crtl_box_analog_input_req = GetCtrlBoxAnalogInput.Request()
+# 		get_crtl_box_analog_input_req.channel = 1
+# 		get_crtl_box_analog_input_future = get_crtl_box_analog_input_cli.call_async(get_crtl_box_analog_input_req)
+# 		rclpy.spin_until_future_complete(self.node, get_crtl_box_analog_input_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(get_crtl_box_analog_input_future.done(), "io/get_ctrl_box_analog_input service working is not done.")
+# 		get_crtl_box_analog_input_resp = get_crtl_box_analog_input_future.result()
+# 		self.assertTrue(get_crtl_box_analog_input_resp.success == True, "io/get_ctrl_box_analog_input service is not working correctly.")
+# 		self.node.destroy_client(get_crtl_box_analog_input_cli)
 
 
-	## Set Control Box Analog Output Test
-	# def test_set_ctrl_box_analog_ouputput_cli(self):
-	# 	""" Set Control Box Analog Output Type """
-	# 	set_crtl_box_analog_output_type_cli = self.node.create_client(SetCtrlBoxAnalogOutputType, "io/set_ctrl_box_analog_output_type")
-	# 	set_crtl_box_analog_output_type_req = SetCtrlBoxAnalogOutputType.Request()
-	# 	set_crtl_box_analog_output_type_req.channel = 1
-	# 	set_crtl_box_analog_output_type_req.mode = 0
-	# 	set_crtl_box_analog_output_type_future = set_crtl_box_analog_output_type_cli.call_async(set_crtl_box_analog_output_type_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_crtl_box_analog_output_type_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_crtl_box_analog_output_type_future.done(), "io/set_ctrl_box_analog_output_type service working is not done.")
-	# 	set_crtl_box_analog_output_type_resp = set_crtl_box_analog_output_type_future.result()
-	# 	self.assertTrue(set_crtl_box_analog_output_type_resp.success == True, "io/set_ctrl_box_analog_output_type service is not working correctly.")
-	# 	self.node.destroy_client(set_crtl_box_analog_output_type_cli)
-
-	# 	time.sleep(5)
-
-	# 	""" Set Control Box Analog Input """
-	# 	get_crtl_box_analog_output_cli = self.node.create_client(SetCtrlBoxAnalogOutput, "io/set_ctrl_box_analog_output")
-	# 	get_crtl_box_analog_output_req = SetCtrlBoxAnalogOutput.Request()
-	# 	get_crtl_box_analog_output_req.channel = 1
-	# 	get_crtl_box_analog_output_req.value = 5.2
-	# 	get_crtl_box_analog_output_future = get_crtl_box_analog_output_cli.call_async(get_crtl_box_analog_output_req)
-	# 	rclpy.spin_until_future_complete(self.node, get_crtl_box_analog_output_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_crtl_box_analog_output_future.done(), "io/set_ctrl_box_analog_output service working is not done.")
-	# 	get_crtl_box_analog_output_resp = get_crtl_box_analog_output_future.result()
-	# 	self.assertTrue(get_crtl_box_analog_output_resp.success == True, "io/set_ctrl_box_analog_output service is not working correctly.")
-	# 	self.node.destroy_client(get_crtl_box_analog_output_cli)
+# 	# Set Control Box Analog Output Type Test
+# 	def test_set_ctrl_box_analog_output_type_cli(self):
+# 		""" Set Control Box Analog Output Type """
+# 		set_crtl_box_analog_output_type_cli = self.node.create_client(SetCtrlBoxAnalogOutputType, "io/set_ctrl_box_analog_output_type")
+# 		set_crtl_box_analog_output_type_req = SetCtrlBoxAnalogOutputType.Request()
+# 		set_crtl_box_analog_output_type_req.channel = 1
+# 		set_crtl_box_analog_output_type_req.mode = 0
+# 		set_crtl_box_analog_output_type_future = set_crtl_box_analog_output_type_cli.call_async(set_crtl_box_analog_output_type_req)
+# 		rclpy.spin_until_future_complete(self.node, set_crtl_box_analog_output_type_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(set_crtl_box_analog_output_type_future.done(), "io/set_ctrl_box_analog_output_type service working is not done.")
+# 		set_crtl_box_analog_output_type_resp = set_crtl_box_analog_output_type_future.result()
+# 		self.assertTrue(set_crtl_box_analog_output_type_resp.success == True, "io/set_ctrl_box_analog_output_type service is not working correctly.")
+# 		self.node.destroy_client(set_crtl_box_analog_output_type_cli)
 
 
-	## Set Control Box Digital Output Test
-	# def test_set_ctrl_box_digital_output_cli(self):
-	# 	""" Set Control Box Digital Output """
-	# 	set_ctrl_box_digital_output_cli = self.node.create_client(SetCtrlBoxDigitalOutput, "io/set_ctrl_box_digital_output")
-	# 	set_ctrl_box_digital_output_req = SetCtrlBoxDigitalOutput.Request()
-	# 	set_ctrl_box_digital_output_req.index = 1 # 1 ~ 16
-	# 	set_ctrl_box_digital_output_req.value = 0 # 0 : ON
-	# 	set_ctrl_box_digital_output_future = set_ctrl_box_digital_output_cli.call_async(set_ctrl_box_digital_output_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_ctrl_box_digital_output_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_ctrl_box_digital_output_future.done(), "io/set_ctrl_box_digital_output service working is not done.")
-	# 	set_ctrl_box_digital_output_resp = set_ctrl_box_digital_output_future.result()
-	# 	self.assertTrue(set_ctrl_box_digital_output_resp.success == True, "io/set_ctrl_box_digital_output service is not working correctly.")
-	# 	self.node.destroy_client(set_ctrl_box_digital_output_cli)
+# 	# Set Control Box Analog Output Test
+# 	def test_set_ctrl_box_analog_ouputput_cli(self):
+# 		""" Set Control Box Analog Output Type """
+# 		set_crtl_box_analog_output_type_cli = self.node.create_client(SetCtrlBoxAnalogOutputType, "io/set_ctrl_box_analog_output_type")
+# 		set_crtl_box_analog_output_type_req = SetCtrlBoxAnalogOutputType.Request()
+# 		set_crtl_box_analog_output_type_req.channel = 1
+# 		set_crtl_box_analog_output_type_req.mode = 0
+# 		set_crtl_box_analog_output_type_future = set_crtl_box_analog_output_type_cli.call_async(set_crtl_box_analog_output_type_req)
+# 		rclpy.spin_until_future_complete(self.node, set_crtl_box_analog_output_type_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(set_crtl_box_analog_output_type_future.done(), "io/set_ctrl_box_analog_output_type service working is not done.")
+# 		set_crtl_box_analog_output_type_resp = set_crtl_box_analog_output_type_future.result()
+# 		self.assertTrue(set_crtl_box_analog_output_type_resp.success == True, "io/set_ctrl_box_analog_output_type service is not working correctly.")
+# 		self.node.destroy_client(set_crtl_box_analog_output_type_cli)
+
+# 		time.sleep(5)
+
+# 		""" Set Control Box Analog Input """
+# 		get_crtl_box_analog_output_cli = self.node.create_client(SetCtrlBoxAnalogOutput, "io/set_ctrl_box_analog_output")
+# 		get_crtl_box_analog_output_req = SetCtrlBoxAnalogOutput.Request()
+# 		get_crtl_box_analog_output_req.channel = 1
+# 		get_crtl_box_analog_output_req.value = 5.2
+# 		get_crtl_box_analog_output_future = get_crtl_box_analog_output_cli.call_async(get_crtl_box_analog_output_req)
+# 		rclpy.spin_until_future_complete(self.node, get_crtl_box_analog_output_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(get_crtl_box_analog_output_future.done(), "io/set_ctrl_box_analog_output service working is not done.")
+# 		get_crtl_box_analog_output_resp = get_crtl_box_analog_output_future.result()
+# 		self.assertTrue(get_crtl_box_analog_output_resp.success == True, "io/set_ctrl_box_analog_output service is not working correctly.")
+# 		self.node.destroy_client(get_crtl_box_analog_output_cli)
 
 
-	## Set Tool Digital Output Test
-	# def test_set_tool_digital_output_cli(self):
-	# 	""" Set Tool Digital Output """
-	# 	set_tool_digital_output_cli = self.node.create_client(SetToolDigitalOutput, "io/set_tool_digital_output")
-	# 	set_tool_digital_output_req = SetToolDigitalOutput.Request()
-	# 	set_tool_digital_output_req.index = 1 # 1 ~ 6
-	# 	set_tool_digital_output_req.value = 0 # 0 : ON
-	# 	set_tool_digital_output_future = set_tool_digital_output_cli.call_async(set_tool_digital_output_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_tool_digital_output_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_tool_digital_output_future.done(), "io/set_ctrl_box_digital_output service working is not done.")
-	# 	set_tool_digital_output_resp = set_tool_digital_output_future.result()
-	# 	self.assertTrue(set_tool_digital_output_resp.success == True, "io/set_ctrl_box_digital_output service is not working correctly.")
-	# 	self.node.destroy_client(set_tool_digital_output_cli)
+# 	# Set Control Box Digital Output Test
+# 	def test_set_ctrl_box_digital_output_cli(self):
+# 		""" Set Control Box Digital Output """
+# 		set_ctrl_box_digital_output_cli = self.node.create_client(SetCtrlBoxDigitalOutput, "io/set_ctrl_box_digital_output")
+# 		set_ctrl_box_digital_output_req = SetCtrlBoxDigitalOutput.Request()
+# 		set_ctrl_box_digital_output_req.index = 1 # 1 ~ 16
+# 		set_ctrl_box_digital_output_req.value = 0 # 0 : ON
+# 		set_ctrl_box_digital_output_future = set_ctrl_box_digital_output_cli.call_async(set_ctrl_box_digital_output_req)
+# 		rclpy.spin_until_future_complete(self.node, set_ctrl_box_digital_output_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(set_ctrl_box_digital_output_future.done(), "io/set_ctrl_box_digital_output service working is not done.")
+# 		set_ctrl_box_digital_output_resp = set_ctrl_box_digital_output_future.result()
+# 		self.assertTrue(set_ctrl_box_digital_output_resp.success == True, "io/set_ctrl_box_digital_output service is not working correctly.")
+# 		self.node.destroy_client(set_ctrl_box_digital_output_cli)
 
 
-	## Get Control Box Digital Input Test
-	# def test_get_ctrl_box_digital_input_cli(self):
-	# 	""" Get Control Box Digital Input """
-	# 	get_ctrl_box_digital_input_cli = self.node.create_client(GetCtrlBoxDigitalInput, "io/get_ctrl_box_digital_input")
-	# 	get_ctrl_box_digital_input_req = GetCtrlBoxDigitalInput.Request()
-	# 	get_ctrl_box_digital_input_req.index = 1 # 1 ~ 16
-	# 	get_ctrl_box_digital_input_future = get_ctrl_box_digital_input_cli.call_async(get_ctrl_box_digital_input_req)
-	# 	rclpy.spin_until_future_complete(self.node, get_ctrl_box_digital_input_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_ctrl_box_digital_input_future.done(), "io/get_ctrl_box_digital_input service working is not done.")
-	# 	get_ctrl_box_digital_input_resp = get_ctrl_box_digital_input_future.result()
-	# 	self.assertTrue(get_ctrl_box_digital_input_resp.success == True, "io/get_ctrl_box_digital_input service is not working correctly.")
-	# 	self.node.destroy_client(get_ctrl_box_digital_input_cli)
+# 	# Set Tool Digital Output Test
+# 	def test_set_tool_digital_output_cli(self):
+# 		""" Set Tool Digital Output """
+# 		set_tool_digital_output_cli = self.node.create_client(SetToolDigitalOutput, "io/set_tool_digital_output")
+# 		set_tool_digital_output_req = SetToolDigitalOutput.Request()
+# 		set_tool_digital_output_req.index = 1 # 1 ~ 6
+# 		set_tool_digital_output_req.value = 0 # 0 : ON
+# 		set_tool_digital_output_future = set_tool_digital_output_cli.call_async(set_tool_digital_output_req)
+# 		rclpy.spin_until_future_complete(self.node, set_tool_digital_output_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(set_tool_digital_output_future.done(), "io/set_ctrl_box_digital_output service working is not done.")
+# 		set_tool_digital_output_resp = set_tool_digital_output_future.result()
+# 		self.assertTrue(set_tool_digital_output_resp.success == True, "io/set_ctrl_box_digital_output service is not working correctly.")
+# 		self.node.destroy_client(set_tool_digital_output_cli)
 
 
-	## Get Control Box Digital Output Test
-	# def test_get_ctrl_box_digital_output_cli(self):
-	# 	""" Get Control Box Digital Input """
-	# 	get_ctrl_box_digital_output_cli = self.node.create_client(GetCtrlBoxDigitalOutput, "io/get_ctrl_box_digital_output")
-	# 	get_ctrl_box_digital_output_req = GetCtrlBoxDigitalOutput.Request()
-	# 	get_ctrl_box_digital_output_req.index = 1 # 1 ~ 16
-	# 	get_ctrl_box_digital_output_future = get_ctrl_box_digital_output_cli.call_async(get_ctrl_box_digital_output_req)
-	# 	rclpy.spin_until_future_complete(self.node, get_ctrl_box_digital_output_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_ctrl_box_digital_output_future.done(), "io/get_ctrl_box_digital_output service working is not done.")
-	# 	get_ctrl_box_digital_output_resp = get_ctrl_box_digital_output_future.result()
-	# 	self.assertTrue(get_ctrl_box_digital_output_resp.success == True, "io/get_ctrl_box_digital_output service is not working correctly.")
-	# 	self.node.destroy_client(get_ctrl_box_digital_output_cli)
+# 	# Get Control Box Digital Input Test
+# 	def test_get_ctrl_box_digital_input_cli(self):
+# 		""" Get Control Box Digital Input """
+# 		get_ctrl_box_digital_input_cli = self.node.create_client(GetCtrlBoxDigitalInput, "io/get_ctrl_box_digital_input")
+# 		get_ctrl_box_digital_input_req = GetCtrlBoxDigitalInput.Request()
+# 		get_ctrl_box_digital_input_req.index = 1 # 1 ~ 16
+# 		get_ctrl_box_digital_input_future = get_ctrl_box_digital_input_cli.call_async(get_ctrl_box_digital_input_req)
+# 		rclpy.spin_until_future_complete(self.node, get_ctrl_box_digital_input_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(get_ctrl_box_digital_input_future.done(), "io/get_ctrl_box_digital_input service working is not done.")
+# 		get_ctrl_box_digital_input_resp = get_ctrl_box_digital_input_future.result()
+# 		self.assertTrue(get_ctrl_box_digital_input_resp.success == True, "io/get_ctrl_box_digital_input service is not working correctly.")
+# 		self.node.destroy_client(get_ctrl_box_digital_input_cli)
 
 
-	## Get Tool Digital Input Test
-	# def test_get_tool_digital_input_cli(self):
-	# 	""" Get Tool Digital Input """
-	# 	get_tool_digital_input_cli = self.node.create_client(GetToolDigitalInput, "io/get_tool_digital_input")
-	# 	get_tool_digital_input_req = GetToolDigitalInput.Request()
-	# 	get_tool_digital_input_req.index = 1 # 1 ~ 6
-	# 	get_tool_digital_input_future = get_tool_digital_input_cli.call_async(get_tool_digital_input_req)
-	# 	rclpy.spin_until_future_complete(self.node, get_tool_digital_input_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_tool_digital_input_future.done(), "io/get_tool_digital_input service working is not done.")
-	# 	get_tool_digital_input_resp = get_tool_digital_input_future.result()
-	# 	self.assertTrue(get_tool_digital_input_resp.success == True, "io/get_tool_digital_input service is not working correctly.")
-	# 	self.node.destroy_client(get_tool_digital_input_cli)
+# 	# Get Control Box Digital Output Test
+# 	def test_get_ctrl_box_digital_output_cli(self):
+# 		""" Get Control Box Digital Input """
+# 		get_ctrl_box_digital_output_cli = self.node.create_client(GetCtrlBoxDigitalOutput, "io/get_ctrl_box_digital_output")
+# 		get_ctrl_box_digital_output_req = GetCtrlBoxDigitalOutput.Request()
+# 		get_ctrl_box_digital_output_req.index = 1 # 1 ~ 16
+# 		get_ctrl_box_digital_output_future = get_ctrl_box_digital_output_cli.call_async(get_ctrl_box_digital_output_req)
+# 		rclpy.spin_until_future_complete(self.node, get_ctrl_box_digital_output_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(get_ctrl_box_digital_output_future.done(), "io/get_ctrl_box_digital_output service working is not done.")
+# 		get_ctrl_box_digital_output_resp = get_ctrl_box_digital_output_future.result()
+# 		self.assertTrue(get_ctrl_box_digital_output_resp.success == True, "io/get_ctrl_box_digital_output service is not working correctly.")
+# 		self.node.destroy_client(get_ctrl_box_digital_output_cli)
 
 
-	## Get Tool Digital Output Test 
-	# def test_get_tool_digital_output_cli(self):
-	# 	""" Get Tool Digital Output """
-	# 	get_tool_digital_output_cli = self.node.create_client(GetToolDigitalOutput, "io/get_tool_digital_output")
-	# 	get_tool_digital_output_req = GetToolDigitalOutput.Request()
-	# 	get_tool_digital_output_req.index = 1 # 1 ~ 6
-	# 	get_tool_digital_output_future = get_tool_digital_output_cli.call_async(get_tool_digital_output_req)
-	# 	rclpy.spin_until_future_complete(self.node, get_tool_digital_output_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_tool_digital_output_future.done(), "io/get_tool_digital_output service working is not done.")
-	# 	get_tool_digital_output_resp = get_tool_digital_output_future.result()
-	# 	self.assertTrue(get_tool_digital_output_resp.success == True, "io/get_tool_digital_output service is not working correctly.")
-	# 	self.node.destroy_client(get_tool_digital_output_cli)
+# 	# Get Tool Digital Input Test
+# 	def test_get_tool_digital_input_cli(self):
+# 		""" Get Tool Digital Input """
+# 		get_tool_digital_input_cli = self.node.create_client(GetToolDigitalInput, "io/get_tool_digital_input")
+# 		get_tool_digital_input_req = GetToolDigitalInput.Request()
+# 		get_tool_digital_input_req.index = 1 # 1 ~ 6
+# 		get_tool_digital_input_future = get_tool_digital_input_cli.call_async(get_tool_digital_input_req)
+# 		rclpy.spin_until_future_complete(self.node, get_tool_digital_input_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(get_tool_digital_input_future.done(), "io/get_tool_digital_input service working is not done.")
+# 		get_tool_digital_input_resp = get_tool_digital_input_future.result()
+# 		self.assertTrue(get_tool_digital_input_resp.success == True, "io/get_tool_digital_input service is not working correctly.")
+# 		self.node.destroy_client(get_tool_digital_input_cli)
+
+
+# 	# Get Tool Digital Output Test 
+# 	def test_get_tool_digital_output_cli(self):
+# 		""" Get Tool Digital Output """
+# 		get_tool_digital_output_cli = self.node.create_client(GetToolDigitalOutput, "io/get_tool_digital_output")
+# 		get_tool_digital_output_req = GetToolDigitalOutput.Request()
+# 		get_tool_digital_output_req.index = 1 # 1 ~ 6
+# 		get_tool_digital_output_future = get_tool_digital_output_cli.call_async(get_tool_digital_output_req)
+# 		rclpy.spin_until_future_complete(self.node, get_tool_digital_output_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(get_tool_digital_output_future.done(), "io/get_tool_digital_output service working is not done.")
+# 		get_tool_digital_output_resp = get_tool_digital_output_future.result()
+# 		self.assertTrue(get_tool_digital_output_resp.success == True, "io/get_tool_digital_output service is not working correctly.")
+# 		self.node.destroy_client(get_tool_digital_output_cli)
 
 
 # """ Modbus Service Client Test Class """
@@ -3278,189 +3275,189 @@ class TestDsrGripperCli(unittest.TestCase):
 
 
 # """ TCP Service Client Test Class """
-# class TestDsrTCPCtrlCli(unittest.TestCase):
-# 	@classmethod
-# 	def setUpClass(cls):
-# 		# Start prerequisite launch scripts
-# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
-# 			"ros2", "launch", "dsr_tests",
-# 			"dsr_bringup_without_spawner_test.launch.py",
-# 			"mode:=virtual",
-# 			"name:={}".format(NAMESPACE),
-# 			"port:=25125"
-# 			],
-# 			stdout=subprocess.PIPE,
-# 			stderr=subprocess.STDOUT,
-# 			universal_newlines=True
-# 		)
-# 		time.sleep(5)
+class TestDsrTCPCtrlCli(unittest.TestCase):
+	@classmethod
+	def setUpClass(cls):
+		# Start prerequisite launch scripts
+		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+			"ros2", "launch", "dsr_tests",
+			"dsr_bringup_without_spawner_test.launch.py",
+			"mode:=virtual",
+			"name:={}".format(NAMESPACE),
+			"port:=25125"
+			],
+			stdout=subprocess.PIPE,
+			stderr=subprocess.STDOUT,
+			universal_newlines=True
+		)
+		time.sleep(5)
 
-# 		cls.spawner_script = subprocess.Popen([
-# 			"ros2", "launch", "dsr_tests",
-# 			"dsr_spawner_cli_test.launch.py",
-# 			"name:={}".format(NAMESPACE)
-# 			],
-# 			stdout=subprocess.PIPE,
-# 			stderr=subprocess.STDOUT,
-# 			universal_newlines=True
-# 		)
-# 		cls._lock = threading.Lock()
+		cls.spawner_script = subprocess.Popen([
+			"ros2", "launch", "dsr_tests",
+			"dsr_spawner_cli_test.launch.py",
+			"name:={}".format(NAMESPACE)
+			],
+			stdout=subprocess.PIPE,
+			stderr=subprocess.STDOUT,
+			universal_newlines=True
+		)
+		cls._lock = threading.Lock()
 
-# 		# Assume if spawners are successfully loaded, Prerequisite done.
-# 		try:
-# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
-# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
-# 				cls.bringup_script.send_signal(signal.SIGINT)
-# 				cls.spawner_script.send_signal(signal.SIGINT)
-# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
-# 		except subprocess.TimeoutExpired as e:
-# 			cls.bringup_script.send_signal(signal.SIGINT)
-# 			cls.spawner_script.send_signal(signal.SIGINT)
-# 			raise Exception('Spawner Time out !!')
+		# Assume if spawners are successfully loaded, Prerequisite done.
+		try:
+			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+				cls.bringup_script.send_signal(signal.SIGINT)
+				cls.spawner_script.send_signal(signal.SIGINT)
+				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+		except subprocess.TimeoutExpired as e:
+			cls.bringup_script.send_signal(signal.SIGINT)
+			cls.spawner_script.send_signal(signal.SIGINT)
+			raise Exception('Spawner Time out !!')
 
-# 		rclpy.init()
-# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
-# 		time.sleep(5)
+		rclpy.init()
+		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+		time.sleep(5)
 
-# 	@classmethod
-# 	def tearDownClass(cls):
-# 		# Terminate Launch scripts
-# 		cls.bringup_script.send_signal(signal.SIGINT)
-# 		cls.spawner_script.send_signal(signal.SIGINT)
-# 		rclpy.shutdown()
+	@classmethod
+	def tearDownClass(cls):
+		# Terminate Launch scripts
+		cls.bringup_script.send_signal(signal.SIGINT)
+		cls.spawner_script.send_signal(signal.SIGINT)
+		rclpy.shutdown()
 
-	## Configure Create TCP Test
-	# def test_config_create_tcp_cli(self):
-	# 	""" Config Create TCP """
-	# 	config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
-	# 	config_create_tcp_req = ConfigCreateTcp.Request()
-	# 	config_create_tcp_req.name = "tcp1"
-	# 	config_create_tcp_req.pos = [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
-	# 	config_create_tcp_future = config_create_tcp_cli.call_async(config_create_tcp_req)
-	# 	rclpy.spin_until_future_complete(self.node, config_create_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(config_create_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
-	# 	config_create_tcp_resp = config_create_tcp_future.result()
-	# 	self.assertTrue(config_create_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
-	# 	self.node.destroy_client(config_create_tcp_cli)
-
-	
-	## Set Current TCP Test
-	# def test_set_current_tcp_cli(self):
-	# 	""" Config Create TCP """
-	# 	config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
-	# 	config_create_tcp_req = ConfigCreateTcp.Request()
-	# 	config_create_tcp_req.name = "tcp1"
-	# 	config_create_tcp_req.pos = [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
-	# 	config_create_tcp_future = config_create_tcp_cli.call_async(config_create_tcp_req)
-	# 	rclpy.spin_until_future_complete(self.node, config_create_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(config_create_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
-	# 	config_create_tcp_resp = config_create_tcp_future.result()
-	# 	self.assertTrue(config_create_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
-	# 	self.node.destroy_client(config_create_tcp_cli)
-
-	# 	time.sleep(5)
-
-	# 	""" Set Current TCP """
-	# 	set_current_tcp_cli = self.node.create_client(SetCurrentTcp, "tcp/set_current_tcp")
-	# 	set_current_tcp_req = SetCurrentTcp.Request()
-	# 	set_current_tcp_req.name = "tcp1"
-	# 	set_current_tcp_future = set_current_tcp_cli.call_async(set_current_tcp_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_current_tcp_future.done(), "tcp/set_current_tcp service working is not done.")
-	# 	set_current_tcp_resp = set_current_tcp_future.result()
-	# 	self.assertTrue(set_current_tcp_resp.success == True, "tcp/set_current_tcp service is not working correctly.")
-	# 	self.node.destroy_client(set_current_tcp_cli)
+	# Configure Create TCP Test
+	def test_config_create_tcp_cli(self):
+		""" Config Create TCP """
+		config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
+		config_create_tcp_req = ConfigCreateTcp.Request()
+		config_create_tcp_req.name = "tcp1"
+		config_create_tcp_req.pos = [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
+		config_create_tcp_future = config_create_tcp_cli.call_async(config_create_tcp_req)
+		rclpy.spin_until_future_complete(self.node, config_create_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(config_create_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
+		config_create_tcp_resp = config_create_tcp_future.result()
+		self.assertTrue(config_create_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
+		self.node.destroy_client(config_create_tcp_cli)
 
 	
-	## Get Current TCP Test
-	# def test_get_current_tcp_cli(self):
-	# 	""" Config Create TCP """
-	# 	config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
-	# 	config_create_tcp_req = ConfigCreateTcp.Request()
-	# 	config_create_tcp_req.name = "tcp1"
-	# 	config_create_tcp_req.pos = [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
-	# 	config_create_tcp_future = config_create_tcp_cli.call_async(config_create_tcp_req)
-	# 	rclpy.spin_until_future_complete(self.node, config_create_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(config_create_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
-	# 	config_create_tcp_resp = config_create_tcp_future.result()
-	# 	self.assertTrue(config_create_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
-	# 	self.node.destroy_client(config_create_tcp_cli)
+	# Set Current TCP Test
+	def test_set_current_tcp_cli(self):
+		""" Config Create TCP """
+		config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
+		config_create_tcp_req = ConfigCreateTcp.Request()
+		config_create_tcp_req.name = "tcp1"
+		config_create_tcp_req.pos = [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
+		config_create_tcp_future = config_create_tcp_cli.call_async(config_create_tcp_req)
+		rclpy.spin_until_future_complete(self.node, config_create_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(config_create_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
+		config_create_tcp_resp = config_create_tcp_future.result()
+		self.assertTrue(config_create_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
+		self.node.destroy_client(config_create_tcp_cli)
 
-	# 	time.sleep(5)
+		time.sleep(5)
 
-	# 	""" Set Current TCP """
-	# 	set_current_tcp_cli = self.node.create_client(SetCurrentTcp, "tcp/set_current_tcp")
-	# 	set_current_tcp_req = SetCurrentTcp.Request()
-	# 	set_current_tcp_req.name = "tcp1"
-	# 	set_current_tcp_future = set_current_tcp_cli.call_async(set_current_tcp_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_current_tcp_future.done(), "tcp/set_current_tcp service working is not done.")
-	# 	set_current_tcp_resp = set_current_tcp_future.result()
-	# 	self.assertTrue(set_current_tcp_resp.success == True, "tcp/set_current_tcp service is not working correctly.")
-	# 	self.node.destroy_client(set_current_tcp_cli)
+		""" Set Current TCP """
+		set_current_tcp_cli = self.node.create_client(SetCurrentTcp, "tcp/set_current_tcp")
+		set_current_tcp_req = SetCurrentTcp.Request()
+		set_current_tcp_req.name = "tcp1"
+		set_current_tcp_future = set_current_tcp_cli.call_async(set_current_tcp_req)
+		rclpy.spin_until_future_complete(self.node, set_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(set_current_tcp_future.done(), "tcp/set_current_tcp service working is not done.")
+		set_current_tcp_resp = set_current_tcp_future.result()
+		self.assertTrue(set_current_tcp_resp.success == True, "tcp/set_current_tcp service is not working correctly.")
+		self.node.destroy_client(set_current_tcp_cli)
 
-	# 	time.sleep(5)
+	
+	# Get Current TCP Test
+	def test_get_current_tcp_cli(self):
+		""" Config Create TCP """
+		config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
+		config_create_tcp_req = ConfigCreateTcp.Request()
+		config_create_tcp_req.name = "tcp1"
+		config_create_tcp_req.pos = [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
+		config_create_tcp_future = config_create_tcp_cli.call_async(config_create_tcp_req)
+		rclpy.spin_until_future_complete(self.node, config_create_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(config_create_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
+		config_create_tcp_resp = config_create_tcp_future.result()
+		self.assertTrue(config_create_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
+		self.node.destroy_client(config_create_tcp_cli)
 
-	# 	""" Get Current TCP """
-	# 	get_current_tcp_cli = self.node.create_client(GetCurrentTcp, "tcp/get_current_tcp")
-	# 	get_current_tcp_future = get_current_tcp_cli.call_async(GetCurrentTcp.Request())
-	# 	rclpy.spin_until_future_complete(self.node, get_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_current_tcp_future.done(), "tcp/get_current_tcp service working is not done.")
-	# 	get_current_tcp_resp = get_current_tcp_future.result()
-	# 	self.assertTrue((get_current_tcp_resp.success == True) and (get_current_tcp_resp.info == "tcp1"), "tcp/get_current_tcp service is not working correctly.")
-	# 	self.node.destroy_client(get_current_tcp_cli)
+		time.sleep(5)
+
+		""" Set Current TCP """
+		set_current_tcp_cli = self.node.create_client(SetCurrentTcp, "tcp/set_current_tcp")
+		set_current_tcp_req = SetCurrentTcp.Request()
+		set_current_tcp_req.name = "tcp1"
+		set_current_tcp_future = set_current_tcp_cli.call_async(set_current_tcp_req)
+		rclpy.spin_until_future_complete(self.node, set_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(set_current_tcp_future.done(), "tcp/set_current_tcp service working is not done.")
+		set_current_tcp_resp = set_current_tcp_future.result()
+		self.assertTrue(set_current_tcp_resp.success == True, "tcp/set_current_tcp service is not working correctly.")
+		self.node.destroy_client(set_current_tcp_cli)
+
+		time.sleep(5)
+
+		""" Get Current TCP """
+		get_current_tcp_cli = self.node.create_client(GetCurrentTcp, "tcp/get_current_tcp")
+		get_current_tcp_future = get_current_tcp_cli.call_async(GetCurrentTcp.Request())
+		rclpy.spin_until_future_complete(self.node, get_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(get_current_tcp_future.done(), "tcp/get_current_tcp service working is not done.")
+		get_current_tcp_resp = get_current_tcp_future.result()
+		self.assertTrue((get_current_tcp_resp.success == True) and (get_current_tcp_resp.info == "tcp1"), "tcp/get_current_tcp service is not working correctly.")
+		self.node.destroy_client(get_current_tcp_cli)
 
 
-	## Configure Delete TCP Test
-	# def test_config_delete_tcp_cli(self):
-	# 	""" Config Create TCP """
-	# 	config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
-	# 	config_create_tcp_req = ConfigCreateTcp.Request()
-	# 	config_create_tcp_req.name = "tcp1"
-	# 	config_create_tcp_req.pos = [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
-	# 	config_create_tcp_future = config_create_tcp_cli.call_async(config_create_tcp_req)
-	# 	rclpy.spin_until_future_complete(self.node, config_create_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(config_create_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
-	# 	config_create_tcp_resp = config_create_tcp_future.result()
-	# 	self.assertTrue(config_create_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
-	# 	self.node.destroy_client(config_create_tcp_cli)
+	# Configure Delete TCP Test
+	def test_config_delete_tcp_cli(self):
+		""" Config Create TCP """
+		config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
+		config_create_tcp_req = ConfigCreateTcp.Request()
+		config_create_tcp_req.name = "tcp1"
+		config_create_tcp_req.pos = [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
+		config_create_tcp_future = config_create_tcp_cli.call_async(config_create_tcp_req)
+		rclpy.spin_until_future_complete(self.node, config_create_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(config_create_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
+		config_create_tcp_resp = config_create_tcp_future.result()
+		self.assertTrue(config_create_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
+		self.node.destroy_client(config_create_tcp_cli)
 		
-	# 	time.sleep(5)
+		time.sleep(5)
 
-	# 	""" Set Current TCP """
-	# 	set_current_tcp_cli = self.node.create_client(SetCurrentTcp, "tcp/set_current_tcp")
-	# 	set_current_tcp_req = SetCurrentTcp.Request()
-	# 	set_current_tcp_req.name = "tcp1"
-	# 	set_current_tcp_future = set_current_tcp_cli.call_async(set_current_tcp_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_current_tcp_future.done(), "tcp/set_current_tcp service working is not done.")
-	# 	set_current_tcp_resp = set_current_tcp_future.result()
-	# 	self.assertTrue(set_current_tcp_resp.success == True, "tcp/set_current_tcp service is not working correctly.")
-	# 	self.node.destroy_client(set_current_tcp_cli)
+		""" Set Current TCP """
+		set_current_tcp_cli = self.node.create_client(SetCurrentTcp, "tcp/set_current_tcp")
+		set_current_tcp_req = SetCurrentTcp.Request()
+		set_current_tcp_req.name = "tcp1"
+		set_current_tcp_future = set_current_tcp_cli.call_async(set_current_tcp_req)
+		rclpy.spin_until_future_complete(self.node, set_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(set_current_tcp_future.done(), "tcp/set_current_tcp service working is not done.")
+		set_current_tcp_resp = set_current_tcp_future.result()
+		self.assertTrue(set_current_tcp_resp.success == True, "tcp/set_current_tcp service is not working correctly.")
+		self.node.destroy_client(set_current_tcp_cli)
 
-	# 	time.sleep(5)
+		time.sleep(5)
 
-	# 	""" Config Delete TCP """
-	# 	config_delete_tcp_cli = self.node.create_client(ConfigDeleteTcp, "tcp/config_delete_tcp")
-	# 	config_delete_tcp_req = ConfigDeleteTcp.Request()
-	# 	config_delete_tcp_req.name = "tcp1"
-	# 	config_delete_tcp_future = config_delete_tcp_cli.call_async(config_delete_tcp_req)
-	# 	rclpy.spin_until_future_complete(self.node, config_delete_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(config_delete_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
-	# 	config_delete_tcp_resp = config_delete_tcp_future.result()
-	# 	self.assertTrue(config_delete_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
-	# 	self.node.destroy_client(config_delete_tcp_cli)
+		""" Config Delete TCP """
+		config_delete_tcp_cli = self.node.create_client(ConfigDeleteTcp, "tcp/config_delete_tcp")
+		config_delete_tcp_req = ConfigDeleteTcp.Request()
+		config_delete_tcp_req.name = "tcp1"
+		config_delete_tcp_future = config_delete_tcp_cli.call_async(config_delete_tcp_req)
+		rclpy.spin_until_future_complete(self.node, config_delete_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(config_delete_tcp_future.done(), "tcp/config_create_tcp service working is not done.")
+		config_delete_tcp_resp = config_delete_tcp_future.result()
+		self.assertTrue(config_delete_tcp_resp.success == True, "tcp/config_create_tcp service is not working correctly.")
+		self.node.destroy_client(config_delete_tcp_cli)
 
-	# 	time.sleep(5)
+		time.sleep(5)
 
-	# 	""" Get Current TCP """
-	# 	get_current_tcp_cli = self.node.create_client(GetCurrentTcp, "tcp/get_current_tcp")
-	# 	get_current_tcp_future = get_current_tcp_cli.call_async(GetCurrentTcp.Request())
-	# 	rclpy.spin_until_future_complete(self.node, get_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_current_tcp_future.done(), "tcp/get_current_tcp service working is not done.")
-	# 	get_current_tcp_resp = get_current_tcp_future.result()
-	# 	self.assertTrue((get_current_tcp_resp.success == True) and (get_current_tcp_resp.info == ""), "tcp/get_current_tcp service is not working correctly.")
-	# 	self.node.destroy_client(get_current_tcp_cli)
+		""" Get Current TCP """
+		get_current_tcp_cli = self.node.create_client(GetCurrentTcp, "tcp/get_current_tcp")
+		get_current_tcp_future = get_current_tcp_cli.call_async(GetCurrentTcp.Request())
+		rclpy.spin_until_future_complete(self.node, get_current_tcp_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(get_current_tcp_future.done(), "tcp/get_current_tcp service working is not done.")
+		get_current_tcp_resp = get_current_tcp_future.result()
+		self.assertTrue((get_current_tcp_resp.success == True) and (get_current_tcp_resp.info == ""), "tcp/get_current_tcp service is not working correctly.")
+		self.node.destroy_client(get_current_tcp_cli)
 
 
 if __name__ == '__main__':
