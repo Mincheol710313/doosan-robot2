@@ -11,6 +11,7 @@ import rclpy.type_support
 NAMESPACE = "dsr01"
 SRV_CALL_TIMEOUT = 30	
 
+""" Motion Client Test Class """
 # class TestDsrMoveCli(unittest.TestCase):
 # 	@classmethod
 # 	def setUpClass(cls):
@@ -1087,8 +1088,9 @@ SRV_CALL_TIMEOUT = 30
 	# 	self.node.destroy_client(jog_multi_cli)
 
 	# 	""" Need the code check jog connect """
-					
 
+
+""" Motion Setting Service Client Test Class """
 # class TestDsrSetCli(unittest.TestCase):
 # 	@classmethod
 # 	def setUpClass(cls):
@@ -1280,7 +1282,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.assertAlmostEqual(target_pos[5], ikin_result_pos[5], delta=0.1)
 # 		self.node.destroy_client(ikin_cli)
 
-
+""" System Service Client Test Class """
 class TestDsrSysCli(unittest.TestCase):
 	@classmethod
 	def setUpClass(cls):
@@ -1393,7 +1395,7 @@ class TestDsrSysCli(unittest.TestCase):
 		""" Set Robot Mode """
 		set_mode_cli = self.node.create_client(SetRobotMode, "system/set_robot_mode")
 		set_mode_req = SetRobotMode.Request()
-		set_mode_req.robot_mode = 0
+		set_mode_req.robot_mode = 1
 		set_mode_future = set_mode_cli.call_async(set_mode_req)
 		rclpy.spin_until_future_complete(self.node, set_mode_future, timeout_sec=SRV_CALL_TIMEOUT)
 		self.assertTrue(set_mode_future.done(), "system/set_robot_mode Service is not done.")
@@ -1500,49 +1502,100 @@ class TestDsrSysCli(unittest.TestCase):
 
 	""" TODO : Need Code to check if SafeStopReset Type has changed"""
 	## SetSafeStopResetType Test
-	# def test_set_safe_stop_reset_type_cli(self):
-	# 	set_safestopreset_cli = self.node.create_client(SetSafeStopResetType, "system/set_safe_stop_reset_type")
-	# 	set_safestopreset_req = SetSafeStopResetType.Request()
-	# 	set_safestopreset_req.reset_type = 1
-	# 	set_safestopreset_future = set_safestopreset_cli.call_async(set_safestopreset_req)
-	# 	rclpy.spin_until_future_complete(self.node, set_safestopreset_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(set_safestopreset_future.done(), "system/set_safe_stop_reset_type service is not done.")
-	# 	set_safestopreset_resp = set_safestopreset_future.result()
-	# 	self.assertTrue(set_safestopreset_resp.success == True, "system/set_safe_stop_reset_type service is not working correctly.")
-	# 	self.node.destroy_client(set_safestopreset_cli)
+	def test_set_safe_stop_reset_type_cli(self):
+		set_safestopreset_cli = self.node.create_client(SetSafeStopResetType, "system/set_safe_stop_reset_type")
+		set_safestopreset_req = SetSafeStopResetType.Request()
+		set_safestopreset_req.reset_type = 1
+		set_safestopreset_future = set_safestopreset_cli.call_async(set_safestopreset_req)
+		rclpy.spin_until_future_complete(self.node, set_safestopreset_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(set_safestopreset_future.done(), "system/set_safe_stop_reset_type service is not done.")
+		set_safestopreset_resp = set_safestopreset_future.result()
+		self.assertTrue(set_safestopreset_resp.success == True, "system/set_safe_stop_reset_type service is not working correctly.")
+		self.node.destroy_client(set_safestopreset_cli)
 
 
 	""" TODO : Need Code to check if Collision Sensitivity has changed"""
 	## Change Collision Sensitivity Test
-	# def test_change_collision_sensitivity_cli(self):
-	# 	change_collision_sense_cli = self.node.create_client(ChangeCollisionSensitivity, "system/change_collision_sensitivity")
-	# 	change_collision_sense_req = ChangeCollisionSensitivity.Request()
-	# 	change_collision_sense_req.sensitivity = 50
-	# 	change_collision_sense_future = change_collision_sense_cli.call_async(change_collision_sense_req)
-	# 	rclpy.spin_until_future_complete(self.node, change_collision_sense_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(change_collision_sense_future.done(), "system/change_collision_sensitivity service is not done.")
-	# 	change_collision_sense_resp = change_collision_sense_future.result()
-	# 	self.assertTrue(change_collision_sense_resp.success == True, "system/change_collision_sensitivity service is not working correctly.")
-	# 	self.node.destroy_client(change_collision_sense_cli)
+	def test_change_collision_sensitivity_cli(self):
+		change_collision_sense_cli = self.node.create_client(ChangeCollisionSensitivity, "system/change_collision_sensitivity")
+		change_collision_sense_req = ChangeCollisionSensitivity.Request()
+		change_collision_sense_req.sensitivity = 50
+		change_collision_sense_future = change_collision_sense_cli.call_async(change_collision_sense_req)
+		rclpy.spin_until_future_complete(self.node, change_collision_sense_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(change_collision_sense_future.done(), "system/change_collision_sensitivity service is not done.")
+		change_collision_sense_resp = change_collision_sense_future.result()
+		self.assertTrue(change_collision_sense_resp.success == True, "system/change_collision_sensitivity service is not working correctly.")
+		self.node.destroy_client(change_collision_sense_cli)
 
 
 	""" TODO : Need to Enhancement to run the GetLastAlarm Service after various actions and determine which logs are generated. """
 	## Get Last Alarm Test
-	# def test_get_last_alarm_cli(self):
-	# 	get_last_alarm_cli = self.node.create_client(GetLastAlarm, "system/get_last_alarm")
-	# 	get_last_alarm_req = GetLastAlarm.Request()
-	# 	get_last_alarm_future = get_last_alarm_cli.call_async(get_last_alarm_req)
-	# 	rclpy.spin_until_future_complete(self.node, get_last_alarm_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(get_last_alarm_future.done(), "system/get_last_alarm is not done.")
-	# 	get_last_alarm_resp = get_last_alarm_future.result()
-	# 	self.assertTrue(get_last_alarm_resp.success == True, "system/get_last_alarm is not working correctly.")
-	# 	self.node.destroy_client(get_last_alarm_cli)
+	def test_get_last_alarm_cli(self):
+		get_last_alarm_cli = self.node.create_client(GetLastAlarm, "system/get_last_alarm")
+		get_last_alarm_req = GetLastAlarm.Request()
+		get_last_alarm_future = get_last_alarm_cli.call_async(get_last_alarm_req)
+		rclpy.spin_until_future_complete(self.node, get_last_alarm_future, timeout_sec=SRV_CALL_TIMEOUT)
+		self.assertTrue(get_last_alarm_future.done(), "system/get_last_alarm is not done.")
+		get_last_alarm_resp = get_last_alarm_future.result()
+		self.assertTrue(get_last_alarm_resp.success == True, "system/get_last_alarm is not working correctly.")
+		self.node.destroy_client(get_last_alarm_cli)
 
 	# 	""" Check Log Correct After Action """
 
 
+""" Aux Control Service Client Test Class """
+# class TestDsrAuxCtrlCli(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(cls):
+# 		# Start prerequisite launch scripts
+# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_bringup_without_spawner_test.launch.py",
+# 			"mode:=virtual",
+# 			"name:={}".format(NAMESPACE),
+# 			"port:=25125"
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		time.sleep(5)
+
+# 		cls.spawner_script = subprocess.Popen([
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_spawner_cli_test.launch.py",
+# 			"name:={}".format(NAMESPACE)
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		cls._lock = threading.Lock()
+
+# 		# Assume if spawners are successfully loaded, Prerequisite done.
+# 		try:
+# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+# 				cls.bringup_script.send_signal(signal.SIGINT)
+# 				cls.spawner_script.send_signal(signal.SIGINT)
+# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+# 		except subprocess.TimeoutExpired as e:
+# 			cls.bringup_script.send_signal(signal.SIGINT)
+# 			cls.spawner_script.send_signal(signal.SIGINT)
+# 			raise Exception('Spawner Time out !!')
+
+# 		rclpy.init()
+# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+# 		time.sleep(5)
+
+# 	@classmethod
+# 	def tearDownClass(cls):
+# 		# Terminate Launch scripts
+# 		cls.bringup_script.send_signal(signal.SIGINT)
+# 		cls.spawner_script.send_signal(signal.SIGINT)
+# 		rclpy.shutdown()
+
 	""" TODO : Need the code change each value """
-	""" Aux Control Client """
 	## Get Control Mode Test
 	# def test_get_control_mode_cli(self):
 	# 	""" Get Control Mode """
@@ -1746,7 +1799,58 @@ class TestDsrSysCli(unittest.TestCase):
 	# 	self.node.destroy_client(get_tool_force_cli)
 
 
-	""" Drl Client """
+""" DRL Service Client Test Class """
+# class TestDsrDRLCli(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(cls):
+# 		# Start prerequisite launch scripts
+# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_bringup_without_spawner_test.launch.py",
+# 			"mode:=virtual",
+# 			"name:={}".format(NAMESPACE),
+# 			"port:=25125"
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		time.sleep(5)
+
+# 		cls.spawner_script = subprocess.Popen([
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_spawner_cli_test.launch.py",
+# 			"name:={}".format(NAMESPACE)
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		cls._lock = threading.Lock()
+
+# 		# Assume if spawners are successfully loaded, Prerequisite done.
+# 		try:
+# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+# 				cls.bringup_script.send_signal(signal.SIGINT)
+# 				cls.spawner_script.send_signal(signal.SIGINT)
+# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+# 		except subprocess.TimeoutExpired as e:
+# 			cls.bringup_script.send_signal(signal.SIGINT)
+# 			cls.spawner_script.send_signal(signal.SIGINT)
+# 			raise Exception('Spawner Time out !!')
+
+# 		rclpy.init()
+# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+# 		time.sleep(5)
+
+# 	@classmethod
+# 	def tearDownClass(cls):
+# 		# Terminate Launch scripts
+# 		cls.bringup_script.send_signal(signal.SIGINT)
+# 		cls.spawner_script.send_signal(signal.SIGINT)
+# 		rclpy.shutdown()
+
 	## Get Drl State Test
 	# def test_get_drl_state_cli(self):
 	# 	""" Drl State """
@@ -1883,7 +1987,58 @@ class TestDsrSysCli(unittest.TestCase):
 	# 	self.node.destroy_client(drl_resume_cli)
 
 
-	""" Tool Client """
+""" Tool Service Client Test Class """
+# class TestDsrToolCli(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(cls):
+# 		# Start prerequisite launch scripts
+# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_bringup_without_spawner_test.launch.py",
+# 			"mode:=virtual",
+# 			"name:={}".format(NAMESPACE),
+# 			"port:=25125"
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		time.sleep(5)
+
+# 		cls.spawner_script = subprocess.Popen([
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_spawner_cli_test.launch.py",
+# 			"name:={}".format(NAMESPACE)
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		cls._lock = threading.Lock()
+
+# 		# Assume if spawners are successfully loaded, Prerequisite done.
+# 		try:
+# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+# 				cls.bringup_script.send_signal(signal.SIGINT)
+# 				cls.spawner_script.send_signal(signal.SIGINT)
+# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+# 		except subprocess.TimeoutExpired as e:
+# 			cls.bringup_script.send_signal(signal.SIGINT)
+# 			cls.spawner_script.send_signal(signal.SIGINT)
+# 			raise Exception('Spawner Time out !!')
+
+# 		rclpy.init()
+# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+# 		time.sleep(5)
+
+# 	@classmethod
+# 	def tearDownClass(cls):
+# 		# Terminate Launch scripts
+# 		cls.bringup_script.send_signal(signal.SIGINT)
+# 		cls.spawner_script.send_signal(signal.SIGINT)
+# 		rclpy.shutdown()
+
 	## Get Current Tool Test
 	# def test_get_current_tool_cli(self):
 	# 	""" Get Current Tool """
@@ -1975,7 +2130,59 @@ class TestDsrSysCli(unittest.TestCase):
 	# 	self.assertTrue(config_delete_tool_resp.success == True, "tool/config_delete_tool service is not working correctly.")
 	# 	self.node.destroy_client(config_delete_tool_resp)
 
-	""" Force Service """
+
+""" Force Service Client Test Class """
+# class TestDsrForceCtrlCli(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(cls):
+# 		# Start prerequisite launch scripts
+# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_bringup_without_spawner_test.launch.py",
+# 			"mode:=virtual",
+# 			"name:={}".format(NAMESPACE),
+# 			"port:=25125"
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		time.sleep(5)
+
+# 		cls.spawner_script = subprocess.Popen([
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_spawner_cli_test.launch.py",
+# 			"name:={}".format(NAMESPACE)
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		cls._lock = threading.Lock()
+
+# 		# Assume if spawners are successfully loaded, Prerequisite done.
+# 		try:
+# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+# 				cls.bringup_script.send_signal(signal.SIGINT)
+# 				cls.spawner_script.send_signal(signal.SIGINT)
+# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+# 		except subprocess.TimeoutExpired as e:
+# 			cls.bringup_script.send_signal(signal.SIGINT)
+# 			cls.spawner_script.send_signal(signal.SIGINT)
+# 			raise Exception('Spawner Time out !!')
+
+# 		rclpy.init()
+# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+# 		time.sleep(5)
+
+# 	@classmethod
+# 	def tearDownClass(cls):
+# 		# Terminate Launch scripts
+# 		cls.bringup_script.send_signal(signal.SIGINT)
+# 		cls.spawner_script.send_signal(signal.SIGINT)
+# 		rclpy.shutdown()
+
 	## Align Axis 1 Test
 	# def test_align_axis_1_cli(self):
 	# 	""" Move Joint """
@@ -2659,7 +2866,58 @@ class TestDsrSysCli(unittest.TestCase):
 	## Robotiq 2F Close
 
 
-	""" IO """
+""" IO Control Service Client Test Class """
+# class TestDsrIOCtrlCli(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(cls):
+# 		# Start prerequisite launch scripts
+# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_bringup_without_spawner_test.launch.py",
+# 			"mode:=virtual",
+# 			"name:={}".format(NAMESPACE),
+# 			"port:=25125"
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		time.sleep(5)
+
+# 		cls.spawner_script = subprocess.Popen([
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_spawner_cli_test.launch.py",
+# 			"name:={}".format(NAMESPACE)
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		cls._lock = threading.Lock()
+
+# 		# Assume if spawners are successfully loaded, Prerequisite done.
+# 		try:
+# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+# 				cls.bringup_script.send_signal(signal.SIGINT)
+# 				cls.spawner_script.send_signal(signal.SIGINT)
+# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+# 		except subprocess.TimeoutExpired as e:
+# 			cls.bringup_script.send_signal(signal.SIGINT)
+# 			cls.spawner_script.send_signal(signal.SIGINT)
+# 			raise Exception('Spawner Time out !!')
+
+# 		rclpy.init()
+# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+# 		time.sleep(5)
+
+# 	@classmethod
+# 	def tearDownClass(cls):
+# 		# Terminate Launch scripts
+# 		cls.bringup_script.send_signal(signal.SIGINT)
+# 		cls.spawner_script.send_signal(signal.SIGINT)
+# 		rclpy.shutdown()
+
 	## Set Control Box Analog Input Type
 	# def test_set_ctrl_box_analog_input_type_cli(self):
 	# 	""" Set Control Box Analog Input Type """
@@ -2833,7 +3091,58 @@ class TestDsrSysCli(unittest.TestCase):
 	# 	self.node.destroy_client(get_tool_digital_output_cli)
 
 
-	""" Modbus """
+""" Modbus Service Client Test Class """
+# class TestDsrModbusCli(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(cls):
+# 		# Start prerequisite launch scripts
+# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_bringup_without_spawner_test.launch.py",
+# 			"mode:=virtual",
+# 			"name:={}".format(NAMESPACE),
+# 			"port:=25125"
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		time.sleep(5)
+
+# 		cls.spawner_script = subprocess.Popen([
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_spawner_cli_test.launch.py",
+# 			"name:={}".format(NAMESPACE)
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		cls._lock = threading.Lock()
+
+# 		# Assume if spawners are successfully loaded, Prerequisite done.
+# 		try:
+# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+# 				cls.bringup_script.send_signal(signal.SIGINT)
+# 				cls.spawner_script.send_signal(signal.SIGINT)
+# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+# 		except subprocess.TimeoutExpired as e:
+# 			cls.bringup_script.send_signal(signal.SIGINT)
+# 			cls.spawner_script.send_signal(signal.SIGINT)
+# 			raise Exception('Spawner Time out !!')
+
+# 		rclpy.init()
+# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+# 		time.sleep(5)
+
+# 	@classmethod
+# 	def tearDownClass(cls):
+# 		# Terminate Launch scripts
+# 		cls.bringup_script.send_signal(signal.SIGINT)
+# 		cls.spawner_script.send_signal(signal.SIGINT)
+# 		rclpy.shutdown()
+
 	## Configure Create Modbus Test
 	# def test_config_create_modbus_cli(self):
 
@@ -2847,7 +3156,58 @@ class TestDsrSysCli(unittest.TestCase):
 	## Set Modbus Output Test
 
 
-	""" TCP """
+""" TCP Service Client Test Class """
+# class TestDsrTCPCtrlCli(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(cls):
+# 		# Start prerequisite launch scripts
+# 		cls.bringup_script = subprocess.Popen([ # how to align RAII?
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_bringup_without_spawner_test.launch.py",
+# 			"mode:=virtual",
+# 			"name:={}".format(NAMESPACE),
+# 			"port:=25125"
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		time.sleep(5)
+
+# 		cls.spawner_script = subprocess.Popen([
+# 			"ros2", "launch", "dsr_tests",
+# 			"dsr_spawner_cli_test.launch.py",
+# 			"name:={}".format(NAMESPACE)
+# 			],
+# 			stdout=subprocess.PIPE,
+# 			stderr=subprocess.STDOUT,
+# 			universal_newlines=True
+# 		)
+# 		cls._lock = threading.Lock()
+
+# 		# Assume if spawners are successfully loaded, Prerequisite done.
+# 		try:
+# 			(stdout, _ ) = cls.spawner_script.communicate(timeout=30)
+# 			if 2 != stdout.count('\033[92m'+"Configured and activated"):
+# 				cls.bringup_script.send_signal(signal.SIGINT)
+# 				cls.spawner_script.send_signal(signal.SIGINT)
+# 				raise Exception('Failed Loading Spawner. stdout : {}'.format(stdout))
+# 		except subprocess.TimeoutExpired as e:
+# 			cls.bringup_script.send_signal(signal.SIGINT)
+# 			cls.spawner_script.send_signal(signal.SIGINT)
+# 			raise Exception('Spawner Time out !!')
+
+# 		rclpy.init()
+# 		cls.node =rclpy.create_node("dsr_move_test_node", namespace=NAMESPACE)
+# 		time.sleep(5)
+
+# 	@classmethod
+# 	def tearDownClass(cls):
+# 		# Terminate Launch scripts
+# 		cls.bringup_script.send_signal(signal.SIGINT)
+# 		cls.spawner_script.send_signal(signal.SIGINT)
+# 		rclpy.shutdown()
+
 	## Configure Create TCP Test
 	# def test_config_create_tcp_cli(self):
 	# 	""" Config Create TCP """
