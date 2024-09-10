@@ -19,6 +19,11 @@
   <xacro:m1013 namespace="$(arg namespace)"/>
    
   <link name="world"/>
+  <!-- Gripper Setting -->
+  <xacro:if value="${gr == 'robotiq_2f'}">
+    <xacro:include filename="$(find dsr_description2)/xacro/robotiq_2f.urdf.xacro" />
+  </xacro:if>
+
   <!-- World fixed joint-->
   <joint name="world_fixed" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -34,6 +39,7 @@
     <xacro:include filename="$(find dsr_description2)/ros2_control/m1013.ros2_control.xacro" />
     <xacro:m1013_ros2_control name="m1013"/>
   </xacro:unless>
+
 
 </robot>
 
