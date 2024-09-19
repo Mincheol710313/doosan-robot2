@@ -32,7 +32,7 @@ from dsr_msgs2.srv import *
 #-----------------------------------------------------------------------------------
 import DR_init
 g_node = None
-g_node = DR_init.__dsr__node
+# g_node = DR_init.__dsr__node
 
 _robot_id    = DR_init.__dsr__id
 _robot_model = DR_init.__dsr__model
