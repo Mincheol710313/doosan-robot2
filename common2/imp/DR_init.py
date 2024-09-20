@@ -1,3 +1,3 @@
 __dsr__id = ""
 __dsr__model = ""
-__dsr_node = None
+__dsr__node = None
