@@ -20,7 +20,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-                'talker = dsr_example2.demo.publisher_member_function:main',
                 'dance = dsr_example2.demo.dance_m1013:main',
         ],
     },
