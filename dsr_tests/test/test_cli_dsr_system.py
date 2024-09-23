@@ -27,6 +27,7 @@ SRV_CALL_TIMEOUT = 30
 # 			stderr=subprocess.STDOUT,
 # 			universal_newlines=True
 # 		)
+		
 # 		time.sleep(5)
 
 # 		cls.spawner_script = subprocess.Popen([
@@ -65,12 +66,15 @@ SRV_CALL_TIMEOUT = 30
 # 		rclpy.shutdown()
 
 # 	def setUp(self):
-# 		self._set_ready_pose()
+# 		print("Ready For Test!!")
 # 		TestDsrMoveCli._lock.acquire()
-
+# 		self._set_ready_pose()
+		
 # 	def tearDown(self):
+# 		print("Test Clear!!")
 # 		self._set_home_pose() # to avoid singularity
 # 		TestDsrMoveCli._lock.release()
+# 		# time.sleep(5)
 
 # 	def _set_ready_pose(self):
 # 		""" Move Joint to Ready Position """
@@ -125,542 +129,21 @@ SRV_CALL_TIMEOUT = 30
 # 		self.node.destroy_client(cli)
 
 # 	""" Motion Client """
-# 	# Move Joint Test 
-# 	def test_move_joint_cli(self):
-# 		print("Move Joint Client Test are starting...") # Debug
-# 		cli = self.node.create_client(MoveJoint, "motion/move_joint")
-# 		target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
-# 		req = MoveJoint.Request()
-# 		req.pos = target_pos
-# 		req.time = 5.0
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_joint future task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_joint response")
-# 		self.node.destroy_client(cli)
+	# # Move Joint Test 
+	# def test_move_joint_cli(self):
+	# 	print("Move Joint Client Test are starting...") # Debug
+	# 	cli = self.node.create_client(MoveJoint, "motion/move_joint")
+	# 	target_pos = [0.0, 0.0, 45.0, 0.0, 45.0, 0.0]
+	# 	req = MoveJoint.Request()
+	# 	req.pos = target_pos
+	# 	req.time = 5.0
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_joint future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_joint response")
+	# 	self.node.destroy_client(cli)
 
-# 		cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
-# 		## TODO: fix hard code section 
-# 		# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
-# 		req = GetCurrentPose.Request(space_type=0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "system/get_current_pose task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "system/get_current_pose response")
-# 		self.node.destroy_client(cli)
-
-# 		## Check pose from sensor stream literally equals to target.
-# 		self.assertAlmostEqual(target_pos[0], resp.pos[0], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[1], resp.pos[1], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[2], resp.pos[2], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[3], resp.pos[3], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
-
-	
-# 		## Check pose from sensor stream literally equals to target.
-		
-# 		self.assertAlmostEqual(target_pos[0], resp.pos[0], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[1], resp.pos[1], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[2], resp.pos[2], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[3], resp.pos[3], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
-
-# 	## Move JointX Test
-# 	def test_move_jointx_cli(self):
-# 		self._set_ready_pose()
-
-# 		""" Move Line to Ready Position """
-# 		cli = self.node.create_client(MoveLine, "motion/move_line")
-# 		target_pos = [400.0, 500.0, 500.0, 0.0, 180.0, 0.0]
-# 		req = MoveLine.Request(pos=target_pos, time=5.0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_line future task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_line response")
-# 		self.node.destroy_client(cli)
-
-# 		""" Get Current PosX"""
-# 		cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
-# 		req = GetCurrentPosx.Request(ref=0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "aux_control/get_current_posx task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
-# 		self.node.destroy_client(cli)
-
-# 		""" Move JointX """
-# 		cli = self.node.create_client(MoveJointx, "motion/move_jointx")
-# 		target_pos = [400.0, 500.0, 800.0, 0.0, 180.0, 0.0]
-# 		req = MoveJointx.Request()
-# 		req.pos = target_pos
-# 		req.vel = 30.0
-# 		req.acc = 60.0
-# 		req.sol = int(resp.task_pos_info[0].data[6])
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_jointx future task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_jointx response")
-# 		self.node.destroy_client(cli)
-
-# 		""" Get Current PosX"""
-# 		cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
-# 		req = GetCurrentPosx.Request(ref=0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "aux_control/get_current_posx task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
-# 		self.node.destroy_client(cli)
-
-# 		## Check pose from sensor stream literally equals to target.
-# 		current_pose = resp.task_pos_info[0].data
-
-# 		self.assertAlmostEqual(target_pos[0], current_pose[0], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[1], current_pose[1], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[2], current_pose[2], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[4], current_pose[4], delta=0.001)
-
-		
-
-# 	# Move Home Test 
-# 	# def test_move_home_cli(self):
-# 	# 	print("Move Home Client Test are starting...") # Debug
-# 	# 	""" Move Joint to Ready Position """
-# 	# 	cli = self.node.create_client(MoveJoint, "motion/move_joint")
-# 	# 	target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
-# 	# 	req = MoveJoint.Request()
-# 	# 	req.pos = target_pos
-# 	# 	# req.sync_type = 1 # ASYNC
-# 	# 	req.time = 5.0
-# 	# 	future = cli.call_async(req)
-# 	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 	# 	self.assertTrue(future.done(), "motion/move_joint future task")
-# 	# 	resp = future.result()
-# 	# 	self.assertTrue(resp.success == True, "motion/move_joint response")
-# 	# 	self.node.destroy_client(cli)
-		
-# 	# 	## READY CHECK
-# 	# 	cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
-# 	# 	## TODO: fix hard code section 
-# 	# 	# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
-# 	# 	req = GetCurrentPose.Request(space_type=0)
-# 	# 	future = cli.call_async(req)
-# 	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 	# 	self.assertTrue(future.done(), "system/get_current_pose task")
-# 	# 	resp = future.result()
-# 	# 	self.assertTrue(resp.success == True, "system/get_current_pose response")
-# 	# 	self.node.destroy_client(cli)
-
-# 	# 	## Check pose from sensor stream literally equals to target.
-		
-# 	# 	self.assertAlmostEqual(target_pos[0], resp.pos[0], delta=0.001)
-# 	# 	self.assertAlmostEqual(target_pos[1], resp.pos[1], delta=0.001)
-# 	# 	self.assertAlmostEqual(target_pos[2], resp.pos[2], delta=0.001)
-# 	# 	self.assertAlmostEqual(target_pos[3], resp.pos[3], delta=0.001)
-# 	# 	self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
-# 	# 	self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
-
-# 	# 	""" Move Home """
-# 	# 	home_cli = self.node.create_client(MoveHome, "motion/move_home")
-# 	# 	home_req = MoveHome.Request()
-# 	# 	home_req.target = 0 
-# 	# 	home_future = home_cli.call_async(home_req)
-# 	# 	rclpy.spin_until_future_complete(self.node, home_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 	# 	self.assertTrue(home_future.done(), "motion/move_wait future task")
-# 	# 	home_resp = home_future.result()
-# 	# 	self.assertTrue(home_resp.success == True, "motion/move_wait reponse")
-# 	# 	self.node.destroy_client(home_cli)
-
-# 	# 	time.sleep(5)
-
-# 	# 	""" Current Pose """
-# 	# 	cur_cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
-# 	# 	cur_req = GetCurrentPose.Request()
-# 	# 	cur_req.space_type = 0
-# 	# 	cur_future = cur_cli.call_async(cur_req)
-# 	# 	rclpy.spin_until_future_complete(self.node, cur_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 	# 	self.assertTrue(cur_future.done(), "aux_control/get_current_posej")
-# 	# 	cur_resp = cur_future.result()
-# 	# 	self.assertTrue(cur_resp.success == True, "aux_control/get_current_posej")
-# 	# 	self.node.destroy_client(cur_cli)
-
-# 	# 	## Check pose from sensor stream literally equals to target.
-# 	# 	self.assertAlmostEqual(0, cur_resp.pos[0], delta=0.001)
-# 	# 	self.assertAlmostEqual(0, cur_resp.pos[1], delta=0.001)
-# 	# 	self.assertAlmostEqual(0, cur_resp.pos[2], delta=0.001)
-# 	# 	self.assertAlmostEqual(0, cur_resp.pos[3], delta=0.001)
-# 	# 	self.assertAlmostEqual(0, cur_resp.pos[4], delta=0.001)
-# 	# 	self.assertAlmostEqual(0, cur_resp.pos[5], delta=0.001)
-
-	
-# 	# Move Line Test 
-# 	def test_move_line_cli(self):
-# 		print("Move Line Client Test are starting...") # Debug
-# 		cli = self.node.create_client(MoveJoint, "motion/move_joint")
-# 		target_pos = [0, 0, 90, 0, 90, 0]
-# 		req = MoveJoint.Request(pos=target_pos, vel=30., acc=30.)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_joint future task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_joint response")
-# 		self.node.destroy_client(cli)
-
-# 		""" Current Pose """
-# 		cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
-# 		## TODO: fix hard code section 
-# 		# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
-# 		req = GetCurrentPose.Request(space_type=0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "system/get_current_pose task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "system/get_current_pose response")
-# 		self.node.destroy_client(cli)
-
-# 		## Check pose from sensor stream literally equals to target.
-		
-# 		self.assertAlmostEqual(target_pos[0], resp.pos[0], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[1], resp.pos[1], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[2], resp.pos[2], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[3], resp.pos[3], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
-
-# 		cli = self.node.create_client(MoveLine, "motion/move_line")
-# 		target_pos = [400, 500, 800, 0, 180, 0]
-# 		req = MoveLine.Request(pos=target_pos, time=5.0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_line future task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_line response")
-# 		self.node.destroy_client(cli)
-
-# 		cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
-# 		req = GetCurrentPosx.Request(ref=0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "aux_control/get_current_posx task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
-# 		self.node.destroy_client(cli)
-
-# 		## Check pose from sensor stream literally equals to target.
-# 		current_pose = resp.task_pos_info[0].data
-
-# 		self.assertAlmostEqual(target_pos[0], current_pose[0], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[1], current_pose[1], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[2], current_pose[2], delta=0.001)
-# 		self.assertAlmostEqual(target_pos[4], current_pose[4], delta=0.001)
-
-
-# 	# Move Circle Test 
-# 	def test_move_circle_cli(self):
-# 		print("Move Circle Client Test are starting...") # Debug
-# 		cli = self.node.create_client(MoveJoint, "motion/move_joint")
-# 		target_pos = [0, 0, 90, 0, 90, 0]
-# 		req = MoveJoint.Request(pos=target_pos, vel=30., acc=30.)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_joint future task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_joint response")
-# 		self.node.destroy_client(cli)
-
-# 		pos_list = []
-# 		cli = self.node.create_client(MoveCircle, "motion/move_circle")
-
-# 		""" Target Pose 1"""
-# 		target_pos1 = Float64MultiArray()
-# 		# Layout Setting
-# 		dim = MultiArrayDimension()
-# 		dim.label = "columns"
-# 		dim.size = 6
-# 		dim.stride = 6
-# 		target_pos1.layout.dim = [dim]
-# 		target_pos1.layout.data_offset = 0
-# 		target_pos1.data = [400.0, 500.0, 800.0, 0.0, 180.0, 0.0]
-# 		pos_list.append(target_pos1)
-
-# 		""" Target Pose 2"""
-# 		target_pos2 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos2.layout.dim = [dim]
-# 		target_pos2.layout.data_offset = 0
-# 		target_pos2.data = [400.0, 500.0, 500.0, 0.0, 180.0, 0.0]
-# 		pos_list.append(target_pos2)
-
-# 		req = MoveCircle.Request()
-# 		req.pos = pos_list
-# 		req.time = 5.0
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_circle task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_circle response")
-# 		self.node.destroy_client(cli)
-
-# 		""" Current Pose """
-# 		cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
-# 		req = GetCurrentPosx.Request(ref=0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "aux_control/get_current_posx task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
-# 		self.node.destroy_client(cli)
-
-# 		## Check pose from sensor stream literally equals to target.
-# 		current_pose = resp.task_pos_info[0].data
-# 		print(current_pose)
-# 		self.assertAlmostEqual(target_pos2.data[0], current_pose[0], delta=0.001)
-# 		self.assertAlmostEqual(target_pos2.data[1], current_pose[1], delta=0.001)
-# 		self.assertAlmostEqual(target_pos2.data[2], current_pose[2], delta=0.001)
-# 		self.assertAlmostEqual(target_pos2.data[4], current_pose[4], delta=0.001)
-
-
-# 	# Move Spline Joint Test
-# 	def test_move_spline_joint_cli(self):
-# 		print("Move Spline Joint Client Test are starting...") # Debug
-# 		""" Move Spline Joint """
-# 		pos_list = []
-# 		cli = self.node.create_client(MoveSplineJoint, "motion/move_spline_joint")
-
-# 		""" Target Pose 1 """
-# 		target_pos1 = Float64MultiArray()
-# 		# Layout Setting
-# 		dim = MultiArrayDimension()
-# 		dim.label = "columns"
-# 		dim.size = 6
-# 		dim.stride = 6
-# 		target_pos1.layout.dim = [dim]
-# 		target_pos1.layout.data_offset = 0
-# 		target_pos1.data = [10.0, -10.0, 20.0, -30.0, 10.0, 20.0]
-# 		pos_list.append(target_pos1)
-
-# 		""" Target Pose 2 """
-# 		target_pos2 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos2.layout.dim = [dim]
-# 		target_pos2.layout.data_offset = 0
-# 		target_pos2.data = [25.0, 0.0, 10.0, -50.0, 20.0, 40.0]
-# 		pos_list.append(target_pos2)
-
-# 		""" Target Pose 3 """
-# 		target_pos3 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos3.layout.dim = [dim]
-# 		target_pos3.layout.data_offset = 0
-# 		target_pos3.data = [50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
-# 		pos_list.append(target_pos3)
-
-
-# 		""" Target Pose 4 """
-# 		target_pos4 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos4.layout.dim = [dim]
-# 		target_pos4.layout.data_offset = 0
-# 		target_pos4.data = [30.0, 10.0, 30.0, -20.0, 10.0, 60.0]
-# 		pos_list.append(target_pos4)
-
-# 		""" Target Pose 5 """
-# 		target_pos5 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos5.layout.dim = [dim]
-# 		target_pos5.layout.data_offset = 0
-# 		target_pos5.data = [20.0, 20.0, 40.0, 20.0, 0.0, 90.0]
-# 		pos_list.append(target_pos5)
-
-# 		req = MoveSplineJoint.Request()
-# 		req.pos = pos_list
-# 		req.pos_cnt = 5
-# 		req.time = 10.0
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_spline_joint task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_spline_joint response")
-# 		self.node.destroy_client(cli)
-
-# 		""" Current Pose """
-# 		cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
-# 		## TODO: fix hard code section 
-# 		# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
-# 		req = GetCurrentPose.Request(space_type=0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "system/get_current_pose task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "system/get_current_pose response")
-# 		self.node.destroy_client(cli)
-
-# 		## Check pose from sensor stream literally equals to target.
-# 		last_pos = target_pos5.data
-# 		self.assertAlmostEqual(last_pos[0], resp.pos[0], delta=0.001)
-# 		self.assertAlmostEqual(last_pos[1], resp.pos[1], delta=0.001)
-# 		self.assertAlmostEqual(last_pos[2], resp.pos[2], delta=0.001)
-# 		self.assertAlmostEqual(last_pos[3], resp.pos[3], delta=0.001)
-# 		self.assertAlmostEqual(last_pos[4], resp.pos[4], delta=0.001)
-# 		self.assertAlmostEqual(last_pos[5], resp.pos[5], delta=0.001)
-
-	
-# 	# Move Spline Task Test
-# 	def test_move_spline_task_cli(self):
-# 		""" Move Line """
-# 		cli = self.node.create_client(MoveLine, "motion/move_line")
-# 		target_pos = [600, 43, 500, 0, 180, 0]
-# 		req = MoveLine.Request(pos=target_pos, time=5.0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_line future task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_line response")
-# 		self.node.destroy_client(cli)
-
-# 		""" Move Spline Task """
-# 		pos_list = []
-# 		cli = self.node.create_client(MoveSplineTask, "motion/move_spline_task")
-
-# 		""" Target Pose 1 """
-# 		target_pos1 = Float64MultiArray()
-# 		# Layout Setting
-# 		dim = MultiArrayDimension()
-# 		dim.label = "columns"
-# 		dim.size = 6
-# 		dim.stride = 6
-# 		target_pos1.layout.dim = [dim]
-# 		target_pos1.layout.data_offset = 0
-# 		target_pos1.data = [600.0, 600.0, 600.0, 0.0, 175.0, 0.0]
-# 		pos_list.append(target_pos1)
-
-# 		""" Target Pose 2 """
-# 		target_pos2 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos2.layout.dim = [dim]
-# 		target_pos2.layout.data_offset = 0
-# 		target_pos2.data = [600.0, 750.0, 600.0, 0.0, 175.0, 0.0]
-# 		pos_list.append(target_pos2)
-
-# 		""" Target Pose 3 """
-# 		target_pos3 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos3.layout.dim = [dim]
-# 		target_pos3.layout.data_offset = 0
-# 		target_pos3.data = [150.0, 600.0, 450.0, 0.0, 175.0, 0.0]
-# 		pos_list.append(target_pos3)
-
-
-# 		""" Target Pose 4 """
-# 		target_pos4 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos4.layout.dim = [dim]
-# 		target_pos4.layout.data_offset = 0
-# 		target_pos4.data = [-300.0, 300.0, 300.0, 0.0, 175.0, 0.0]
-# 		pos_list.append(target_pos4)
-
-# 		""" Target Pose 5 """
-# 		target_pos5 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos5.layout.dim = [dim]
-# 		target_pos5.layout.data_offset = 0
-# 		target_pos5.data = [-200.0, 700.0, 500.0, 0.0, 175.0, 0.0]
-# 		pos_list.append(target_pos5)
-
-# 		""" Target Pose 6 """
-# 		target_pos6 = Float64MultiArray()
-# 		# Layout Setting
-# 		target_pos6.layout.dim = [dim]
-# 		target_pos6.layout.data_offset = 0
-# 		target_pos6.data = [600.0, 600.0, 400.0, 0.0, 175.0, 0.0]
-# 		pos_list.append(target_pos6)
-
-# 		req = MoveSplineTask.Request()
-# 		req.pos = pos_list
-# 		req.pos_cnt = 6
-# 		req.time = 20.0
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_spline_joint task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_spline_joint response")
-# 		self.node.destroy_client(cli)
-
-# 		""" Current Pose """
-# 		cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
-# 		req = GetCurrentPosx.Request(ref=0)
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "aux_control/get_current_posx task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
-# 		self.node.destroy_client(cli)
-
-# 		## Check pose from sensor stream literally equals to target.
-# 		current_pose = resp.task_pos_info[0].data
-# 		print(current_pose)
-# 		self.assertAlmostEqual(target_pos6.data[0], current_pose[0], delta=0.001)
-# 		self.assertAlmostEqual(target_pos6.data[1], current_pose[1], delta=0.001)
-# 		self.assertAlmostEqual(target_pos6.data[2], current_pose[2], delta=0.001)
-# 		self.assertAlmostEqual(target_pos6.data[4], current_pose[4], delta=0.001)
-	
-
-# 	""" TODO : How can check the motion correct?"""
-# 	# Move Spiral Test
-# 	def test_move_spiral_cli(self):
-# 		""" Move Spiral """
-# 		cli = self.node.create_client(MoveSpiral, "motion/move_spiral")
-# 		req = MoveSpiral.Request()
-# 		req.revolution = 5.0
-# 		req.max_radius = 20.0
-# 		req.max_length = 10.0
-# 		req.time = 10.0
-# 		req.task_axis = 2
-# 		req.ref = 1
-# 		future = cli.call_async(req)
-# 		rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(future.done(), "motion/move_spiral future task")
-# 		resp = future.result()
-# 		self.assertTrue(resp.success == True, "motion/move_spiral response")
-# 		self.node.destroy_client(cli)
-
-
-	# # Check Motion Test
-	# def test_move_pause_and_resume_cli(self):
-	# 	""" Move Joint """
-	# 	move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
-	# 	target_pos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-	# 	move_req = MoveJoint.Request()
-	# 	move_req.pos = target_pos
-	# 	move_req.time = 5.0
-	# 	move_req.sync_type = 1
-	# 	move_future = move_cli.call_async(move_req)
-	# 	rclpy.spin_until_future_complete(self.node, move_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(move_future.done(), "motion/move joint future task")
-	# 	move_resp = move_future.result()
-	# 	self.assertTrue(move_resp.success == True, "motion/move joint response")
-	# 	self.node.destroy_client(move_cli)
-
-	# 	""" Check Motion """
-	# 	check_cli = self.node.create_client(CheckMotion, "motion/check_motion")
-	# 	check_req = CheckMotion.Request()
-	# 	check_future = check_cli.call_async(check_req)
-	# 	rclpy.spin_until_future_complete(self.node, check_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(check_future.done(), "motion/check_motion future task")
-	# 	check_resp = check_future.result()
-	# 	self.assertTrue((check_resp.status == 2) and (check_resp.success == True) ,"motion/check_motion response")
-	# 	self.node.destroy_client(check_cli)
-
-	# 	time.sleep(10)
-
-	# 	""" Check Current Pose """
 	# 	cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
 	# 	## TODO: fix hard code section 
 	# 	# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
@@ -680,19 +163,501 @@ SRV_CALL_TIMEOUT = 30
 	# 	self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
 	# 	self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
 
+	
+	# 	## Check pose from sensor stream literally equals to target.
+		
+	# 	self.assertAlmostEqual(target_pos[0], resp.pos[0], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[1], resp.pos[1], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[2], resp.pos[2], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[3], resp.pos[3], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
 
-	# # Move Pause Test
-	# def test_move_pause_cli(self):
+	# # Move JointX Test
+	# def test_move_jointx_cli(self):
+	# 	print("Move Jointx Client Test are starting...") # Debug
+	# 	self._set_ready_pose()
+
+	# 	""" Move Line to Ready Position """
+	# 	cli = self.node.create_client(MoveLine, "motion/move_line")
+	# 	target_pos = [400.0, 500.0, 500.0, 0.0, 180.0, 0.0]
+	# 	req = MoveLine.Request(pos=target_pos, time=5.0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_line future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_line response")
+	# 	self.node.destroy_client(cli)
+
+	# 	""" Get Current PosX"""
+	# 	cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
+	# 	req = GetCurrentPosx.Request(ref=0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "aux_control/get_current_posx task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
+	# 	self.node.destroy_client(cli)
+
+	# 	""" Move JointX """
+	# 	cli = self.node.create_client(MoveJointx, "motion/move_jointx")
+	# 	target_pos = [400.0, 500.0, 800.0, 0.0, 180.0, 0.0]
+	# 	req = MoveJointx.Request()
+	# 	req.pos = target_pos
+	# 	req.vel = 30.0
+	# 	req.acc = 60.0
+	# 	req.sol = int(resp.task_pos_info[0].data[6])
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_jointx future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_jointx response")
+	# 	self.node.destroy_client(cli)
+
+	# 	""" Get Current PosX"""
+	# 	cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
+	# 	req = GetCurrentPosx.Request(ref=0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "aux_control/get_current_posx task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
+	# 	self.node.destroy_client(cli)
+
+	# 	## Check pose from sensor stream literally equals to target.
+	# 	current_pose = resp.task_pos_info[0].data
+
+	# 	self.assertAlmostEqual(target_pos[0], current_pose[0], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[1], current_pose[1], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[2], current_pose[2], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[4], current_pose[4], delta=0.001)
+
+
+	# # Move Home Test 
+	# def test_move_home_cli(self):
+	# 	print("Move Home Client Test are starting...") # Debug
+	# 	""" Move Joint to Ready Position """
+	# 	cli = self.node.create_client(MoveJoint, "motion/move_joint")
+	# 	target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
+	# 	req = MoveJoint.Request()
+	# 	req.pos = target_pos
+	# 	# req.sync_type = 1 # ASYNC
+	# 	req.time = 5.0
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_joint future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_joint response")
+	# 	self.node.destroy_client(cli)
+		
+	# 	## READY CHECK
+	# 	cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
+	# 	## TODO: fix hard code section 
+	# 	# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
+	# 	req = GetCurrentPose.Request(space_type=0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "system/get_current_pose task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "system/get_current_pose response")
+	# 	self.node.destroy_client(cli)
+
+	# 	## Check pose from sensor stream literally equals to target.
+		
+	# 	self.assertAlmostEqual(target_pos[0], resp.pos[0], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[1], resp.pos[1], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[2], resp.pos[2], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[3], resp.pos[3], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
+
+	# 	""" Move Home """
+	# 	home_cli = self.node.create_client(MoveHome, "motion/move_home")
+	# 	home_req = MoveHome.Request()
+	# 	home_req.target = 0 
+	# 	home_future = home_cli.call_async(home_req)
+	# 	rclpy.spin_until_future_complete(self.node, home_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(home_future.done(), "motion/move_wait future task")
+	# 	home_resp = home_future.result()
+	# 	self.assertTrue(home_resp.success == True, "motion/move_wait reponse")
+	# 	self.node.destroy_client(home_cli)
+
+	# 	time.sleep(5)
+
+	# 	""" Current Pose """
+	# 	cur_cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
+	# 	cur_req = GetCurrentPose.Request()
+	# 	cur_req.space_type = 0
+	# 	cur_future = cur_cli.call_async(cur_req)
+	# 	rclpy.spin_until_future_complete(self.node, cur_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(cur_future.done(), "aux_control/get_current_posej")
+	# 	cur_resp = cur_future.result()
+	# 	self.assertTrue(cur_resp.success == True, "aux_control/get_current_posej")
+	# 	self.node.destroy_client(cur_cli)
+
+	# 	## Check pose from sensor stream literally equals to target.
+	# 	self.assertAlmostEqual(0, cur_resp.pos[0], delta=0.001)
+	# 	self.assertAlmostEqual(0, cur_resp.pos[1], delta=0.001)
+	# 	self.assertAlmostEqual(0, cur_resp.pos[2], delta=0.001)
+	# 	self.assertAlmostEqual(0, cur_resp.pos[3], delta=0.001)
+	# 	self.assertAlmostEqual(0, cur_resp.pos[4], delta=0.001)
+	# 	self.assertAlmostEqual(0, cur_resp.pos[5], delta=0.001)
+
+	
+	# # Move Line Test 
+	# def test_move_line_cli(self):
+	# 	print("Move Line Client Test are starting...") # Debug
+	# 	cli = self.node.create_client(MoveJoint, "motion/move_joint")
+	# 	target_pos = [0, 0, 90, 0, 90, 0]
+	# 	req = MoveJoint.Request(pos=target_pos, vel=30., acc=30.)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_joint future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_joint response")
+	# 	self.node.destroy_client(cli)
+
+	# 	""" Current Pose """
+	# 	cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
+	# 	## TODO: fix hard code section 
+	# 	# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
+	# 	req = GetCurrentPose.Request(space_type=0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "system/get_current_pose task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "system/get_current_pose response")
+	# 	self.node.destroy_client(cli)
+
+	# 	## Check pose from sensor stream literally equals to target.
+		
+	# 	self.assertAlmostEqual(target_pos[0], resp.pos[0], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[1], resp.pos[1], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[2], resp.pos[2], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[3], resp.pos[3], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
+
+	# 	cli = self.node.create_client(MoveLine, "motion/move_line")
+	# 	target_pos = [400, 500, 800, 0, 180, 0]
+	# 	req = MoveLine.Request(pos=target_pos, time=5.0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_line future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_line response")
+	# 	self.node.destroy_client(cli)
+
+	# 	cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
+	# 	req = GetCurrentPosx.Request(ref=0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "aux_control/get_current_posx task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
+	# 	self.node.destroy_client(cli)
+
+	# 	## Check pose from sensor stream literally equals to target.
+	# 	current_pose = resp.task_pos_info[0].data
+
+	# 	self.assertAlmostEqual(target_pos[0], current_pose[0], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[1], current_pose[1], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[2], current_pose[2], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos[4], current_pose[4], delta=0.001)
+
+
+	# # Move Circle Test 
+	# def test_move_circle_cli(self):
+	# 	print("Move Circle Client Test are starting...") # Debug
+	# 	cli = self.node.create_client(MoveJoint, "motion/move_joint")
+	# 	target_pos = [0, 0, 90, 0, 90, 0]
+	# 	req = MoveJoint.Request(pos=target_pos, vel=30., acc=30.)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_joint future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_joint response")
+	# 	self.node.destroy_client(cli)
+
+	# 	pos_list = []
+	# 	cli = self.node.create_client(MoveCircle, "motion/move_circle")
+
+	# 	""" Target Pose 1"""
+	# 	target_pos1 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	dim = MultiArrayDimension()
+	# 	dim.label = "columns"
+	# 	dim.size = 6
+	# 	dim.stride = 6
+	# 	target_pos1.layout.dim = [dim]
+	# 	target_pos1.layout.data_offset = 0
+	# 	target_pos1.data = [400.0, 500.0, 800.0, 0.0, 180.0, 0.0]
+	# 	pos_list.append(target_pos1)
+
+	# 	""" Target Pose 2"""
+	# 	target_pos2 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos2.layout.dim = [dim]
+	# 	target_pos2.layout.data_offset = 0
+	# 	target_pos2.data = [400.0, 500.0, 500.0, 0.0, 180.0, 0.0]
+	# 	pos_list.append(target_pos2)
+
+	# 	req = MoveCircle.Request()
+	# 	req.pos = pos_list
+	# 	req.time = 5.0
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_circle task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_circle response")
+	# 	self.node.destroy_client(cli)
+
+	# 	""" Current Pose """
+	# 	cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
+	# 	req = GetCurrentPosx.Request(ref=0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "aux_control/get_current_posx task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
+	# 	self.node.destroy_client(cli)
+
+	# 	## Check pose from sensor stream literally equals to target.
+	# 	current_pose = resp.task_pos_info[0].data
+	# 	self.assertAlmostEqual(target_pos2.data[0], current_pose[0], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos2.data[1], current_pose[1], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos2.data[2], current_pose[2], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos2.data[4], current_pose[4], delta=0.001)
+
+
+	# # Move Spline Joint Test
+	# def test_move_spline_joint_cli(self):
+	# 	self._set_home_pose()
+	# 	print("Move Spline Joint Client Test are starting...") # Debug
+	# 	""" Move Spline Joint """
+	# 	pos_list = []
+	# 	cli = self.node.create_client(MoveSplineJoint, "motion/move_spline_joint")
+
+	# 	""" Target Pose 1 """
+	# 	target_pos1 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	dim = MultiArrayDimension()
+	# 	dim.label = "columns"
+	# 	dim.size = 6
+	# 	dim.stride = 6
+	# 	target_pos1.layout.dim = [dim]
+	# 	target_pos1.layout.data_offset = 0
+	# 	target_pos1.data = [10.0, -10.0, 20.0, -30.0, 10.0, 20.0]
+	# 	pos_list.append(target_pos1)
+
+	# 	""" Target Pose 2 """
+	# 	target_pos2 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos2.layout.dim = [dim]
+	# 	target_pos2.layout.data_offset = 0
+	# 	target_pos2.data = [25.0, 0.0, 10.0, -50.0, 20.0, 40.0]
+	# 	pos_list.append(target_pos2)
+
+	# 	""" Target Pose 3 """
+	# 	target_pos3 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos3.layout.dim = [dim]
+	# 	target_pos3.layout.data_offset = 0
+	# 	target_pos3.data = [50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+	# 	pos_list.append(target_pos3)
+
+	# 	""" Target Pose 4 """
+	# 	target_pos4 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos4.layout.dim = [dim]
+	# 	target_pos4.layout.data_offset = 0
+	# 	target_pos4.data = [30.0, 10.0, 30.0, -20.0, 10.0, 60.0]
+	# 	pos_list.append(target_pos4)
+
+	# 	""" Target Pose 5 """
+	# 	target_pos5 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos5.layout.dim = [dim]
+	# 	target_pos5.layout.data_offset = 0
+	# 	target_pos5.data = [20.0, 20.0, 40.0, 20.0, 0.0, 90.0]
+	# 	pos_list.append(target_pos5)
+
+	# 	req = MoveSplineJoint.Request()
+	# 	req.pos = pos_list
+	# 	req.pos_cnt = 5
+	# 	req.time = 10.0
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_spline_joint task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_spline_joint response")
+	# 	self.node.destroy_client(cli)
+
+	# 	""" Current Pose """
+	# 	cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
+	# 	## TODO: fix hard code section 
+	# 	# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
+	# 	req = GetCurrentPose.Request(space_type=0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "system/get_current_pose task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "system/get_current_pose response")
+	# 	self.node.destroy_client(cli)
+
+	# 	## Check pose from sensor stream literally equals to target.
+	# 	last_pos = target_pos5.data
+	# 	self.assertAlmostEqual(last_pos[0], resp.pos[0], delta=0.001)
+	# 	self.assertAlmostEqual(last_pos[1], resp.pos[1], delta=0.001)
+	# 	self.assertAlmostEqual(last_pos[2], resp.pos[2], delta=0.001)
+	# 	self.assertAlmostEqual(last_pos[3], resp.pos[3], delta=0.001)
+	# 	self.assertAlmostEqual(last_pos[4], resp.pos[4], delta=0.001)
+	# 	self.assertAlmostEqual(last_pos[5], resp.pos[5], delta=0.001)
+
+	
+	# # Move Spline Task Test
+	# def test_move_spline_task_cli(self):
+	# 	print("Move Spline Task Client Test are starting...") # Debug
+	# 	""" Move Line """
+	# 	cli = self.node.create_client(MoveLine, "motion/move_line")
+	# 	target_pos = [600, 43, 500, 0, 180, 0]
+	# 	req = MoveLine.Request(pos=target_pos, time=5.0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_line future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_line response")
+	# 	self.node.destroy_client(cli)
+
+	# 	""" Move Spline Task """
+	# 	pos_list = []
+	# 	cli = self.node.create_client(MoveSplineTask, "motion/move_spline_task")
+
+	# 	""" Target Pose 1 """
+	# 	target_pos1 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	dim = MultiArrayDimension()
+	# 	dim.label = "columns"
+	# 	dim.size = 6
+	# 	dim.stride = 6
+	# 	target_pos1.layout.dim = [dim]
+	# 	target_pos1.layout.data_offset = 0
+	# 	target_pos1.data = [600.0, 600.0, 600.0, 0.0, 175.0, 0.0]
+	# 	pos_list.append(target_pos1)
+
+	# 	""" Target Pose 2 """
+	# 	target_pos2 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos2.layout.dim = [dim]
+	# 	target_pos2.layout.data_offset = 0
+	# 	target_pos2.data = [600.0, 750.0, 600.0, 0.0, 175.0, 0.0]
+	# 	pos_list.append(target_pos2)
+
+	# 	""" Target Pose 3 """
+	# 	target_pos3 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos3.layout.dim = [dim]
+	# 	target_pos3.layout.data_offset = 0
+	# 	target_pos3.data = [150.0, 600.0, 450.0, 0.0, 175.0, 0.0]
+	# 	pos_list.append(target_pos3)
+
+
+	# 	""" Target Pose 4 """
+	# 	target_pos4 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos4.layout.dim = [dim]
+	# 	target_pos4.layout.data_offset = 0
+	# 	target_pos4.data = [-300.0, 300.0, 300.0, 0.0, 175.0, 0.0]
+	# 	pos_list.append(target_pos4)
+
+	# 	""" Target Pose 5 """
+	# 	target_pos5 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos5.layout.dim = [dim]
+	# 	target_pos5.layout.data_offset = 0
+	# 	target_pos5.data = [-200.0, 700.0, 500.0, 0.0, 175.0, 0.0]
+	# 	pos_list.append(target_pos5)
+
+	# 	""" Target Pose 6 """
+	# 	target_pos6 = Float64MultiArray()
+	# 	# Layout Setting
+	# 	target_pos6.layout.dim = [dim]
+	# 	target_pos6.layout.data_offset = 0
+	# 	target_pos6.data = [600.0, 600.0, 400.0, 0.0, 175.0, 0.0]
+	# 	pos_list.append(target_pos6)
+
+	# 	req = MoveSplineTask.Request()
+	# 	req.pos = pos_list
+	# 	req.pos_cnt = 6
+	# 	req.time = 20.0
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_spline_joint task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_spline_joint response")
+	# 	self.node.destroy_client(cli)
+
+	# 	""" Current Pose """
+	# 	cli = self.node.create_client(GetCurrentPosx, "aux_control/get_current_posx")
+	# 	req = GetCurrentPosx.Request(ref=0)
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "aux_control/get_current_posx task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "aux_control/get_current_posx response")
+	# 	self.node.destroy_client(cli)
+
+	# 	## Check pose from sensor stream literally equals to target.
+	# 	current_pose = resp.task_pos_info[0].data
+	# 	self.assertAlmostEqual(target_pos6.data[0], current_pose[0], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos6.data[1], current_pose[1], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos6.data[2], current_pose[2], delta=0.001)
+	# 	self.assertAlmostEqual(target_pos6.data[4], current_pose[4], delta=0.001)
+	
+
+	# """ TODO : How can check the motion correct?"""
+	# # Move Spiral Test
+	# def test_move_spiral_cli(self):
+	# 	print("Move Spiral Client Test are starting...") # Debug
+	# 	""" Move Spiral """
+	# 	cli = self.node.create_client(MoveSpiral, "motion/move_spiral")
+	# 	req = MoveSpiral.Request()
+	# 	req.revolution = 5.0
+	# 	req.max_radius = 20.0
+	# 	req.max_length = 10.0
+	# 	req.time = 10.0
+	# 	req.task_axis = 2
+	# 	req.ref = 1
+	# 	future = cli.call_async(req)
+	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(future.done(), "motion/move_spiral future task")
+	# 	resp = future.result()
+	# 	self.assertTrue(resp.success == True, "motion/move_spiral response")
+	# 	self.node.destroy_client(cli)
+
+
+	# # Move Pause and Resume Test
+	# def test_move_pause_and_resume_cli(self):
+	# 	self._set_home_pose()
+	# 	print("Move Pause and Resume Client Test are starting...") # Debug
+
 	# 	""" Move Joint """
 	# 	move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
-	# 	target_pos = [0.0, 45.0, 0.0, 0.0, 45.0, 0.0]
+	# 	target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
 	# 	move_req = MoveJoint.Request()
 	# 	move_req.pos = target_pos
 	# 	move_req.time = 5.0
 	# 	move_req.sync_type = 1
 	# 	move_future = move_cli.call_async(move_req)
+	# 	rclpy.spin_until_future_complete(self.node, move_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(move_future.done(), "motion/move joint future task")
+	# 	move_resp = move_future.result()
+	# 	self.assertTrue(move_resp.success == True, "motion/move joint response")
+	# 	self.node.destroy_client(move_cli)
 
-	# 	""" Motion Pause """
+	# 	# time.sleep(2)
+
+	# 	""" Move Pause """
 	# 	pause_cli = self.node.create_client(MovePause, "motion/move_pause")
 	# 	pause_req = MovePause.Request()
 	# 	pause_future = pause_cli.call_async(pause_req)
@@ -709,78 +674,46 @@ SRV_CALL_TIMEOUT = 30
 	# 	rclpy.spin_until_future_complete(self.node, check_future, timeout_sec=SRV_CALL_TIMEOUT)
 	# 	self.assertTrue(check_future.done(), "motion/check_motion future task")
 	# 	check_resp = check_future.result()
-	# 	# Motion Status is 2
-	# 	self.assertTrue((check_resp.status == 2) and (check_resp.success == True) ,"motion/check_motion response")
+	# 	self.assertTrue((check_resp.status == 2) and (check_resp.success == True) ,"motion/check_motion response") # 2 : motion in operation
 	# 	self.node.destroy_client(check_cli)
-	# 	self.node.destroy_client(move_cli)
-
-	# # Move Resume Test
-	# def test_move_resume_cli(self):
-	# 	""" Move Joint """
-	# 	move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
-	# 	target_pos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-	# 	move_req = MoveJoint.Request()
-	# 	move_req.pos = target_pos
-	# 	move_req.time = 5.0
-	# 	move_req.sync_type = 1
-	# 	move_future = move_cli.call_async(move_req)
-
-	# 	""" Move Pause """
-	# 	pause_cli = self.node.create_client(MovePause, "motion/move_pause")
-	# 	pause_req = MovePause.Request()
-	# 	pause_future = pause_cli.call_async(pause_req)
-	# 	rclpy.spin_until_future_complete(self.node, pause_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(pause_future.done(), "motion/move_pause future task")
-	# 	pause_resp = pause_future.result()
-	# 	self.assertTrue(pause_resp.success == True, "motion/move_pause response")
-	# 	self.node.destroy_client(pause_cli)
 
 	# 	""" Move Resume """
-	# 	pause_cli = self.node.create_client(MoveResume, "motion/move_resume")
-	# 	pause_req = MoveResume.Request()
-	# 	pause_future = pause_cli.call_async(pause_req)
-	# 	rclpy.spin_until_future_complete(self.node, pause_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(pause_future.done(), "motion/move_resume future task")
-	# 	pause_resp = pause_future.result()
-	# 	self.assertTrue(pause_resp.success == True, "motion/move_resume response")
+	# 	resume_cli = self.node.create_client(MoveResume, "motion/move_resume")
+	# 	resume_req = MoveResume.Request()
+	# 	resume_future = resume_cli.call_async(resume_req)
+	# 	rclpy.spin_until_future_complete(self.node, resume_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(resume_future.done(), "motion/move_resume future task")
+	# 	resume_resp = resume_future.result()
+	# 	self.assertTrue(resume_resp.success == True, "motion/move_resume response")
 	# 	self.node.destroy_client(pause_cli)
 
-	# 	time.sleep(10)
+	# 	""" Check Motion """
+	# 	check_cli = self.node.create_client(CheckMotion, "motion/check_motion")
+	# 	check_req = CheckMotion.Request()
+	# 	check_future = check_cli.call_async(check_req)
+	# 	rclpy.spin_until_future_complete(self.node, check_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(check_future.done(), "motion/check_motion future task")
+	# 	check_resp = check_future.result()
+	# 	self.assertTrue((check_resp.status == 2) and (check_resp.success == True) ,"motion/check_motion response") # 2 : motion in operation
+	# 	self.node.destroy_client(check_cli)
 
-	# 	""" Check Pose """
-	# 	cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
-	#  	## TODO: fix hard code section 
-	# 	# (replace 'space_type=0' with 'space_type=Request.ROBOT_SPACE_JOINT')
-	# 	req = GetCurrentPose.Request(space_type=0)
-	# 	future = cli.call_async(req)
-	# 	rclpy.spin_until_future_complete(self.node, future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(future.done(), "system/get_current_pose task")
-	# 	resp = future.result()
-	# 	self.assertTrue(resp.success == True, "system/get_current_pose response")
-	# 	self.node.destroy_client(cli)
 
-	# 	## Check pose from sensor stream literally equals to target.
-	# 	self.assertAlmostEqual(target_pos[0], resp.pos[0], delta=0.001)
-	# 	self.assertAlmostEqual(target_pos[1], resp.pos[1], delta=0.001)
-	# 	self.assertAlmostEqual(target_pos[2], resp.pos[2], delta=0.001)
-	# 	self.assertAlmostEqual(target_pos[3], resp.pos[3], delta=0.001)
-	# 	self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
-	# 	self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
-
-	# 	self.node.destroy_client(move_cli)
-
-	## Move Stop Test 
+	# # Move Stop Test 
 	# def test_move_stop_cli(self):
+	# 	print("Move Stop Client Test are starting...") # Debug
+
 	# 	""" Move Joint """
 	# 	move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
-	# 	target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
+	# 	target_pos = [0.0, 0.0, 45.0, 0.0, 45.0, 0.0]
 	# 	move_req = MoveJoint.Request()
 	# 	move_req.pos = target_pos
 	# 	move_req.time = 5.0
 	# 	move_req.sync_type = 1
 	# 	move_future = move_cli.call_async(move_req)
 
-	# 	""" Motion Pause """
+	# 	# time.sleep(2)
+
+	# 	""" Motion Stop """
 	# 	stop_cli = self.node.create_client(MoveStop, "motion/move_stop")
 	# 	stop_req = MoveStop.Request()
 	# 	stop_req.stop_mode = 0
@@ -790,6 +723,8 @@ SRV_CALL_TIMEOUT = 30
 	# 	pause_resp = stop_future.result()
 	# 	self.assertTrue(pause_resp.success == True, "motion/move_stop response")
 	# 	self.node.destroy_client(stop_future)
+
+	# 	# time.sleep(2)
 
 	# 	""" Check Motion """
 	# 	check_cli = self.node.create_client(CheckMotion, "motion/check_motion")
@@ -818,10 +753,8 @@ SRV_CALL_TIMEOUT = 30
 	# 	self.assertTrue(target_pos[2] != resp.pos[2])
 	# 	self.assertTrue(target_pos[4] != resp.pos[4])
 
-	#	self.node.destroy_client(move_cli)
-
 	
-	## Move Wait Test 
+	# # Move Wait Test
 	# def test_move_wait_cli(self):
 	# 	""" Move Joint """
 	# 	move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
@@ -831,13 +764,18 @@ SRV_CALL_TIMEOUT = 30
 	# 	move_req.time = 5.0
 	# 	move_req.sync_type = 1
 	# 	move_future = move_cli.call_async(move_req)
+	# 	rclpy.spin_until_future_complete(self.node, move_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(move_future.done(), "motion/move joint future task")
+	# 	move_resp = move_future.result()
+	# 	self.assertTrue(move_resp.success == True, "motion/move joint response")
+	# 	self.node.destroy_client(move_cli)
 
 	# 	""" Motion Wait """
 	# 	wait_cli = self.node.create_client(MoveWait, "motion/move_wait")
 	# 	wait_req = MoveWait.Request()
 	# 	wait_future = wait_cli.call_async(wait_req)
 	# 	rclpy.spin_until_future_complete(self.node, wait_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(wait_future.done(), "motion/m
+
 
 	# 	""" Check Pose """
 	# 	cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
@@ -859,11 +797,11 @@ SRV_CALL_TIMEOUT = 30
 	# 	self.assertAlmostEqual(target_pos[4], resp.pos[4], delta=0.001)
 	# 	self.assertAlmostEqual(target_pos[5], resp.pos[5], delta=0.001)
 
-	# 	self.node.destroy_client(move_cli)
 	
-
-	## Move Periodic Test 
+	# # Move Periodic Test  
 	# def test_move_periodic_cli(self):
+	# 	print("Move Periodic Client Test are starting...") # Debug
+
 	# 	""" Move Perioidic """
 	# 	period_cli = self.node.create_client(MovePeriodic, "motion/move_periodic")
 	# 	period_req = MovePeriodic.Request()
@@ -880,8 +818,10 @@ SRV_CALL_TIMEOUT = 30
 	# 	self.node.destroy_client(period_cli)
 
 
-	# # Move Blending Test
+	# # # Move Blending Test
 	# def test_move_blending_cli(self):
+	# 	print("Move Blending Client Test are starting...") # Debug
+
 	# 	""" Move Joint for Initial Angle """
 	# 	move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
 	# 	target_pos = [45.0, 0.0, 90.0, 0.0, 90.0, 45.0]
@@ -1022,7 +962,6 @@ SRV_CALL_TIMEOUT = 30
 
 	# 				get_current_posj_result = get_current_posj_resp.pos
 	# 				end_posj = [62.813, 43.044, 82.747, 0.000, 54.209, 62.813]
-	# 				print(get_current_posj_result)
 	# 				self.assertAlmostEqual(get_current_posj_result[0], end_posj[0], delta = 1)
 	# 				self.assertAlmostEqual(get_current_posj_result[1], end_posj[1], delta = 1)
 	# 				self.assertAlmostEqual(get_current_posj_result[2], end_posj[2], delta = 1)
@@ -1030,14 +969,17 @@ SRV_CALL_TIMEOUT = 30
 	# 				self.assertAlmostEqual(get_current_posj_result[4], end_posj[4], delta = 1)
 	# 				self.assertAlmostEqual(get_current_posj_result[5], end_posj[5], delta = 1)
 
-	## Trans Test
+	# # Trans Test
 	# def test_trans_cli(self):
+	# 	print("Move Trans Client Test are starting...") # Debug
+
 	# 	""" Trans """
 	# 	trans_cli = self.node.create_client(Trans, "motion/trans")
 	# 	trans_req = Trans.Request()
-	# 	trans_req.pos = [500.0, 45.0, 700.0, 0.0, 180.0, 0.0]
-	# 	trans_req.delta = [10.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-	# 	trans_req.ref = 1
+	# 	trans_req.pos = [200.0, 200.0, 200.0, 0.0, 180.0, 0.0]
+	# 	trans_req.delta = [100.0, 100.0, 100.0, 0.0, 0.0, 0.0]
+	# 	trans_req.ref = 0
+	# 	trans_req.ref_out = 0
 	# 	trans_future = trans_cli.call_async(trans_req)
 	# 	rclpy.spin_until_future_complete(self.node, trans_future, timeout_sec=SRV_CALL_TIMEOUT)
 	# 	self.assertTrue(trans_future.done(), "motion/trans service working is not done.")
@@ -1046,16 +988,17 @@ SRV_CALL_TIMEOUT = 30
 	# 	self.node.destroy_client(trans_cli)
 
 	# 	trans_pos = trans_resp.trans_pos
-	# 	target_pos = [490.0, 45.0, 700.0, 0.0, 180.0, 0.0]
+	# 	target_pos = [300.0, 300.0, 300.0, 45.0, 180.0, 45.0]
 	# 	self.assertAlmostEqual(trans_pos[0], target_pos[0], delta=0.01)
 	# 	self.assertAlmostEqual(trans_pos[1], target_pos[1], delta=0.01)
 	# 	self.assertAlmostEqual(trans_pos[2], target_pos[2], delta=0.01)
-	# 	# self.assertAlmostEqual(trans_pos[3], target_pos[3], delta=0.01)
 	# 	self.assertAlmostEqual(trans_pos[4], target_pos[4], delta=0.01)
-	# 	# self.assertAlmostEqual(trans_pos[5], target_pos[5], delta=0.01)
 
-	## Jog Test
+
+	# # Jog Test
 	# def test_jog_cli(self):
+	# 	print("Jog Client Test are starting...") # Debug
+
 	# 	""" Jog """
 	# 	jog_cli = self.node.create_client(Jog, "motion/jog")
 	# 	jog_req = Jog.Request()
@@ -1069,26 +1012,16 @@ SRV_CALL_TIMEOUT = 30
 	# 	self.assertTrue(jog_resp.success == True, "motion/jog service is not working correct.")
 	# 	self.node.destroy_client(jog_cli)
 
-	# 	""" Need the code check jog connect """
-
-
-	## Jog Multi Test
-	# def test_jog_multi_cli(self):
-	# 	""" Jog Multi """
-	# 	jog_multi_cli = self.node.create_client(JogMulti, "motion/jog_multi")
-	# 	jog_multi_req = JogMulti.Request()
-	# 	jog_multi_req.jog_axis = [1.0, 0.0, 1.0, 0.0, 0.0, 0.0]
-	# 	jog_multi_req.move_reference = 0
-	# 	jog_multi_req.speed = 60.0
-	# 	jog_multi_future = jog_multi_cli.call_async(jog_multi_req)
-	# 	rclpy.spin_until_future_complete(self.node, jog_multi_future, timeout_sec=SRV_CALL_TIMEOUT)
-	# 	self.assertTrue(jog_multi_future.done(), "motion/jog_multi service working is not done.")
-	# 	jog_mulit_resp = jog_multi_future.result()
-	# 	self.assertTrue(jog_mulit_resp.success == True, "motion/jog_multi service is not working correctly.")
-	# 	self.node.destroy_client(jog_multi_cli)
-
-	# 	""" Need the code check jog connect """
-
+	# 	""" Motion Stop """
+	# 	stop_cli = self.node.create_client(MoveStop, "motion/move_stop")
+	# 	stop_req = MoveStop.Request()
+	# 	stop_req.stop_mode = 0
+	# 	stop_future = stop_cli.call_async(stop_req)
+	# 	rclpy.spin_until_future_complete(self.node, stop_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(stop_future.done(), "motion/move_stop future task")
+	# 	pause_resp = stop_future.result()
+	# 	self.assertTrue(pause_resp.success == True, "motion/move_stop response")
+	# 	self.node.destroy_client(stop_future)
 
 """ Motion Setting Service Client Test Class """
 # class TestDsrSetCli(unittest.TestCase):
@@ -1141,9 +1074,19 @@ SRV_CALL_TIMEOUT = 30
 # 		cls.bringup_script.send_signal(signal.SIGINT)
 # 		cls.spawner_script.send_signal(signal.SIGINT)
 # 		rclpy.shutdown()
+
+# 	def setUp(self):
+# 		print("Ready For Test!!")
+# 		TestDsrSetCli._lock.acquire()
+
+# 	def tearDown(self):
+# 		print("Test Clear!!")
+# 		TestDsrSetCli._lock.release()
 		
 # 	## Set Reference Coordinate Test
 # 	def test_set_ref_coord_cli(self):
+# 		print("Set Reference Coordinate Client Test are starting...") # Debug
+
 # 		""" Set Ref Coordinate """
 # 		set_ref_coord_cli = self.node.create_client(SetRefCoord, "motion/set_ref_coord")
 # 		set_ref_coord_req = SetRefCoord.Request()
@@ -1160,6 +1103,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Set Singularity Handling Test
 # 	def test_set_singularity_handling_cli(self):
+# 		print("Set Singularity Handling Client Test are starting...") # Debug
+
 # 		""" Set Singularity Handling """
 # 		singularity_handle_cli = self.node.create_client(SetSingularityHandling, "motion/set_singularity_handling")
 # 		singularity_handle_req = SetSingularityHandling.Request()
@@ -1175,6 +1120,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Change Operation Speed Test
 # 	def test_change_operation_speed_cli(self):
+# 		print("Change Operation Speed Client Test are starting...") # Debug
+
 # 		""" Change Operation Speed """
 # 		# 10% speed
 # 		change_operation_speed_cli = self.node.create_client(ChangeOperationSpeed, "motion/change_operation_speed")
@@ -1191,6 +1138,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Enable Alter Motion Test
 # 	def test_enable_alter_motion_cli(self):
+# 		print("Enable Alter Motion Client Test are starting...") # Debug
+
 # 		""" Enable Alter Motion """
 # 		enable_alter_motion_cli = self.node.create_client(EnableAlterMotion, "motion/enable_alter_motion")
 # 		enable_alter_motion_req = EnableAlterMotion.Request()
@@ -1209,6 +1158,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Disalbe Alter Motion Test
 # 	def test_disable_alter_motion_cli(self):
+# 		print("Disable Alter Motion Client Test are starting...") # Debug
+
 # 		""" Disable Alter Motion """
 # 		disable_alter_motion_cli = self.node.create_client(DisableAlterMotion, "motion/disable_alter_motion")
 # 		disable_alter_motion_future = disable_alter_motion_cli.call_async(DisableAlterMotion.Request())
@@ -1221,6 +1172,8 @@ SRV_CALL_TIMEOUT = 30
 # 	""" TODO : Need the code check alter motion real operation """
 # 	## Alter Motion Test
 # 	def test_alter_motion_cli(self):
+# 		print("Alter Motion Client Test are starting...") # Debug
+
 # 		alter_motion_cli = self.node.create_client(AlterMotion, "motion/alter_motion")
 # 		alter_motion_req = AlterMotion.Request()
 # 		alter_motion_req.pos = [10.0, 0.0, 0.0, 10.0, 0.0, 0.0]
@@ -1234,6 +1187,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## FKin Test
 # 	def test_fkin_cli(self):
+# 		print("Fkin Client Test are starting...") # Debug
+
 # 		""" Fkin """
 # 		fkin_cli = self.node.create_client(Fkin, "motion/fkin")
 # 		fkin_req = Fkin.Request()
@@ -1259,6 +1214,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Ikin Test
 # 	def test_ikin_cli(self):
+# 		print("Ikin Client Test are starting...") # Debug
+
 # 		""" Ikin """
 # 		ikin_cli = self.node.create_client(Ikin, "motion/ikin")
 # 		ikin_req = Ikin.Request()
@@ -1281,6 +1238,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.assertAlmostEqual(target_pos[4], ikin_result_pos[4], delta=0.1)
 # 		self.assertAlmostEqual(target_pos[5], ikin_result_pos[5], delta=0.1)
 # 		self.node.destroy_client(ikin_cli)
+
 
 """ System Service Client Test Class """
 # class TestDsrSysCli(unittest.TestCase):
@@ -1332,11 +1290,21 @@ SRV_CALL_TIMEOUT = 30
 # 		# Terminate Launch scripts
 # 		cls.bringup_script.send_signal(signal.SIGINT)
 # 		cls.spawner_script.send_signal(signal.SIGINT)
-# 		rclpy.shutdown()	
+# 		rclpy.shutdown()
+
+# 	def setUp(self):
+# 		print("Ready For Test!!")
+# 		TestDsrSysCli._lock.acquire()
+
+# 	def tearDown(self):
+# 		print("Test Clear!!")
+# 		TestDsrSysCli._lock.release()
 
 # 	""" System Client """
 # 	## Get Robot State Test 
 # 	def test_get_robot_state_cli(self):
+# 		print("Get Robot State Client Test are starting...") # Debug
+
 # 		""" Move Joint """
 # 		move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
 # 		target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
@@ -1366,6 +1334,8 @@ SRV_CALL_TIMEOUT = 30
 # 	""" TODO : Need Code Modification to allow checking the transition and changes in operational state """
 # 	## Set Robot Control(State) Test
 # 	def test_set_robot_control_cli(self):
+# 		print("Set Robot Control Client Test are starting...") # Debug
+
 # 		""" Set Robot Control(State) """
 # 		set_control_cli = self.node.create_client(SetRobotControl, "system/set_robot_control")
 # 		set_control_req = SetRobotControl.Request(robot_control=0)
@@ -1379,6 +1349,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	### Get Robot Mode Test 
 # 	def test_get_robot_mode_cli(self):
+# 		print("Get Robot Mode Client Test are starting...") # Debug
+
 # 		""" Get Robot Mode """
 # 		get_mode_cli = self.node.create_client(GetRobotMode, "system/get_robot_mode")
 # 		get_mode_req = GetRobotMode.Request()
@@ -1392,6 +1364,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Set Robot Mode Test
 # 	def test_set_robot_mode_cli(self):
+# 		print("Set Robot Mode Client Test are starting...") # Debug
+
 # 		""" Set Robot Mode """
 # 		set_mode_cli = self.node.create_client(SetRobotMode, "system/set_robot_mode")
 # 		set_mode_req = SetRobotMode.Request()
@@ -1417,6 +1391,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	### Get Robot Speed Mode Test
 # 	def test_get_robot_speed_mode_cli(self):
+# 		print("Get Robot Speed Mode Client Test are starting...") # Debug
+
 # 		""" Get Robot Speed Mode """
 # 		get_speed_mode_cli = self.node.create_client(GetRobotSpeedMode, "system/get_robot_speed_mode")
 # 		get_speed_mode_req = GetRobotSpeedMode.Request()
@@ -1430,6 +1406,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Set Robot Speed Mode Test
 # 	def test_set_robot_speed_mode_cli(self):
+# 		print("Set Robot Speed Mode Client Test are starting...") # Debug
+
 # 		""" Set Robot Speed Mode """
 # 		set_speed_mode_cli = self.node.create_client(SetRobotSpeedMode, "system/set_robot_speed_mode")
 # 		set_speed_mode_req = SetRobotSpeedMode.Request()
@@ -1453,6 +1431,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Get Robot System Test
 # 	def test_get_robot_system_cli(self):
+# 		print("Get Robot System Client Test are starting...") # Debug
+
 # 		""" Get Robot System """
 # 		get_system_cli = self.node.create_client(GetRobotSystem, "system/get_robot_system")
 # 		get_system_req = GetRobotSystem.Request()
@@ -1466,6 +1446,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Set Robot System Test
 # 	def test_set_robot_system_cli(self):
+# 		print("Set Robot System Client Test are starting...") # Debug
+
 # 		""" Set Robot System """
 # 		set_system_cli = self.node.create_client(SetRobotSystem, "system/set_robot_system")
 # 		set_system_req = SetRobotSystem.Request()
@@ -1489,6 +1471,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## ServoOff Test
 # 	def test_servo_off_cli(self):
+# 		print("Servo Off Client Test are starting...") # Debug
+
 # 		""" Servo Off """
 # 		servo_off_cli = self.node.create_client(ServoOff, "system/servo_off")
 # 		servo_off_req = ServoOff.Request()
@@ -1503,6 +1487,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## SetSafeStopResetType Test
 # 	def test_set_safe_stop_reset_type_cli(self):
+# 		print("Set Safe Stop Reset Type Client Test are starting...") # Debug
+
 # 		set_safestopreset_cli = self.node.create_client(SetSafeStopResetType, "system/set_safe_stop_reset_type")
 # 		set_safestopreset_req = SetSafeStopResetType.Request()
 # 		set_safestopreset_req.reset_type = 1
@@ -1516,6 +1502,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Change Collision Sensitivity Test
 # 	def test_change_collision_sensitivity_cli(self):
+# 		print("Change Collision Sensitivity Client Test are starting...") # Debug
+
 # 		change_collision_sense_cli = self.node.create_client(ChangeCollisionSensitivity, "system/change_collision_sensitivity")
 # 		change_collision_sense_req = ChangeCollisionSensitivity.Request()
 # 		change_collision_sense_req.sensitivity = 50
@@ -1529,6 +1517,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	## Get Last Alarm Test
 # 	def test_get_last_alarm_cli(self):
+# 		print("Get Last Alarm Client Test are starting...") # Debug
+
 # 		get_last_alarm_cli = self.node.create_client(GetLastAlarm, "system/get_last_alarm")
 # 		get_last_alarm_req = GetLastAlarm.Request()
 # 		get_last_alarm_future = get_last_alarm_cli.call_async(get_last_alarm_req)
@@ -1591,165 +1581,198 @@ SRV_CALL_TIMEOUT = 30
 # 		cls.spawner_script.send_signal(signal.SIGINT)
 # 		rclpy.shutdown()
 
-# 	""" TODO : Need the code change each value """
+# 	def setUp(self):
+# 		print("Ready For Test!!")
+# 		TestDsrAuxCtrlCli._lock.acquire()
+
+# 	def tearDown(self):
+# 		print("Test Clear!!")
+# 		TestDsrAuxCtrlCli._lock.release()
+
 # 	# Get Control Mode Test
 # 	def test_get_control_mode_cli(self):
+# 		print("Get Control Mode Client Test are starting...") # Debug
+
 # 		""" Get Control Mode """
 # 		get_control_mode_cli = self.node.create_client(GetControlMode, "aux_control/get_control_mode")
 # 		get_control_mode_future = get_control_mode_cli.call_async(GetControlMode.Request())
 # 		rclpy.spin_until_future_complete(self.node, get_control_mode_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_control_mode_future.done(), "aux_control/get_control_mode service working is not done.")
 # 		get_control_mode_resp = get_control_mode_future.result()
-# 		# print(get_control_mode_resp)
+# 		print(get_control_mode_resp)
 # 		self.assertTrue((get_control_mode_resp.success == True) and (get_control_mode_resp.control_mode == 0), "aux_control/get_control_mode service is not working correctly.")
 # 		self.node.destroy_client(get_control_mode_cli)
 
 
 # 	# Get Control Space Test
 # 	def test_get_control_space_cli(self):
+# 		print("Get Control Space Client Test are starting...") # Debug
+
 # 		""" Get Control Space """
 # 		get_control_space_cli = self.node.create_client(GetControlSpace, "aux_control/get_control_space")
 # 		get_control_space_future = get_control_space_cli.call_async(GetControlSpace.Request())
 # 		rclpy.spin_until_future_complete(self.node, get_control_space_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_control_space_future.done(), "aux_control/get_control_space service working is not done.")
 # 		get_control_space_resp = get_control_space_future.result()
-# 		# print(get_control_space_resp)
+# 		print(get_control_space_resp)
 # 		self.assertTrue((get_control_space_resp.success == True) and (get_control_space_resp.space == 0), "aux_control/get_control_space service is not working correctly.")
 # 		self.node.destroy_client(get_control_space_cli)
 
 
 # 	# Get Current Rotm Test
 # 	def test_get_current_rotm_cli(self):
+# 		print("Get Current Rotation Matrix Client Test are starting...") # Debug
+
 # 		""" Get Current Rotm """
 # 		get_current_rotm_cli = self.node.create_client(GetCurrentRotm, "aux_control/get_current_rotm")
 # 		get_current_rotm_future = get_current_rotm_cli.call_async(GetCurrentRotm.Request(ref=0))
 # 		rclpy.spin_until_future_complete(self.node, get_current_rotm_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_current_rotm_future.done(), "aux_control/get_current_rotm service working is not done.")
 # 		get_current_rotm_resp = get_current_rotm_future.result()
-# 		# print(get_current_rotm_resp)
+# 		print(get_current_rotm_resp)
 # 		self.assertTrue(get_current_rotm_resp.success == True, "aux_control/get_current_rotm service is not working correctly.")
 # 		self.node.destroy_client(get_current_rotm_cli)
 
 
 # 	# Get Current Solution Space Test
 # 	def test_get_current_solution_space_cli(self):
+# 		print("Get Current Solution Space Client Test are starting...") # Debug
+
 # 		""" Get Current Rotm """
 # 		get_current_solution_space_cli = self.node.create_client(GetCurrentSolutionSpace, "aux_control/get_current_solution_space")
 # 		get_current_solution_space_future = get_current_solution_space_cli.call_async(GetCurrentSolutionSpace.Request())
 # 		rclpy.spin_until_future_complete(self.node, get_current_solution_space_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_current_solution_space_future.done(), "aux_control/get_current_solution_space service working is not done.")
 # 		get_current_solution_space_resp = get_current_solution_space_future.result()
-# 		# print(get_current_solution_space_resp)
+# 		print(get_current_solution_space_resp)
 # 		self.assertTrue(get_current_solution_space_resp.success == True, "aux_control/get_current_solution_space service is not working correctly.")
 # 		self.node.destroy_client(get_current_solution_space_cli)
 
 
 # 	# Get Current Tool Flange Posx Test
 # 	def test_get_current_tool_flange_posx_cli(self):
+# 		print("Get Current Tool Flange Posx Client Test are starting...") # Debug
+
 # 		""" Get Current Tool Flange Posx """
 # 		get_current_tool_flange_posx_cli = self.node.create_client(GetCurrentToolFlangePosx, "aux_control/get_current_tool_flange_posx")
 # 		get_current_tool_flange_posx_future = get_current_tool_flange_posx_cli.call_async(GetCurrentToolFlangePosx.Request(ref=0))
 # 		rclpy.spin_until_future_complete(self.node, get_current_tool_flange_posx_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_current_tool_flange_posx_future.done(), "aux_control/get_current_tool_flange_posx service working is not done.")
 # 		get_current_tool_flange_posx_resp = get_current_tool_flange_posx_future.result()
-# 		# print(get_current_tool_flange_posx_resp)
+# 		print(get_current_tool_flange_posx_resp)
 # 		self.assertTrue(get_current_tool_flange_posx_resp.success == True, "aux_control/get_current_tool_flange_posx service is not working correctly.")
 # 		self.node.destroy_client(get_current_tool_flange_posx_cli)
 
 
 # 	# Get Current Velj Test
 # 	def test_get_current_velj_cli(self):
+# 		print("Get Current Joint Velocigy Client Test are starting...") # Debug
+
 # 		""" Get Current Velj """
 # 		get_current_velj_cli = self.node.create_client(GetCurrentVelj, "aux_control/get_current_velj")
 # 		get_current_velj_future = get_current_velj_cli.call_async(GetCurrentVelj.Request())
 # 		rclpy.spin_until_future_complete(self.node, get_current_velj_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_current_velj_future.done(), "aux_control/get_current_velj service working is not done.")
 # 		get_current_velj_resp = get_current_velj_future.result()
-# 		# print(get_current_velj_resp)
+# 		print(get_current_velj_resp)
 # 		self.assertTrue(get_current_velj_resp.success == True, "aux_control/get_current_velj service is not working correctly.")
 # 		self.node.destroy_client(get_current_velj_cli)
 
 
 # 	# Get Current Velx Test
 # 	def test_get_current_velx_cli(self):
+# 		print("Get Current Task Space Velocigy Client Test are starting...") # Debug
+
 # 		""" Get Current Velx """
 # 		get_current_velx_cli = self.node.create_client(GetCurrentVelx, "aux_control/get_current_velx")
 # 		get_current_velx_future = get_current_velx_cli.call_async(GetCurrentVelx.Request(ref=0))
 # 		rclpy.spin_until_future_complete(self.node, get_current_velx_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_current_velx_future.done(), "aux_control/get_current_velx service working is not done.")
 # 		get_current_velx_resp = get_current_velx_future.result()
-# 		# print(get_current_velj_resp)
+# 		print(get_current_velx_resp)
 # 		self.assertTrue(get_current_velx_resp.success == True, "aux_control/get_current_velx service is not working correctly.")
 # 		self.node.destroy_client(get_current_velx_cli)
 
 
 # 	# Get Desired Posj Test
 # 	def test_get_desired_posj_cli(self):
+# 		print("Get Desired Joint Position Client Test are starting...") # Debug
+
 # 		""" Get Desired Posj """
 # 		get_desired_posj_cli = self.node.create_client(GetDesiredPosj, "aux_control/get_desired_posj")
 # 		get_desired_posj_future = get_desired_posj_cli.call_async(GetDesiredPosj.Request())
 # 		rclpy.spin_until_future_complete(self.node, get_desired_posj_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_desired_posj_future.done(), "aux_control/get_desired_posj service working is not done.")
 # 		get_desired_posj_resp = get_desired_posj_future.result()
-# 		# print(get_desired_posj_resp)
+# 		print(get_desired_posj_resp)
 # 		self.assertTrue(get_desired_posj_resp.success == True, "aux_control/get_desired_posj service is not working correctly.")
 # 		self.node.destroy_client(get_desired_posj_cli) 
 
 
 # 	# Get Desired Posx Test
 # 	def test_get_desired_posx_cli(self):
+# 		print("Get Desired Task Space Position Client Test are starting...") # Debug
+
 # 		""" Get Desired Posx """
 # 		get_desired_posx_cli = self.node.create_client(GetDesiredPosx, "aux_control/get_desired_posx")
 # 		get_desired_posx_future = get_desired_posx_cli.call_async(GetDesiredPosx.Request(ref=0))
 # 		rclpy.spin_until_future_complete(self.node, get_desired_posx_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_desired_posx_future.done(), "aux_control/get_desired_posx service working is not done.")
 # 		get_desired_posx_resp = get_desired_posx_future.result()
-# 		# print(get_desired_posx_resp)
+# 		print(get_desired_posx_resp)
 # 		self.assertTrue(get_desired_posx_resp.success == True, "aux_control/get_desired_posx service is not working correctly.")
 # 		self.node.destroy_client(get_desired_posx_cli)
 
 
 # 	# Get Desired Velj Test
 # 	def test_get_desired_velj_cli(self):
+# 		print("Get Desired Joint Velocity Client Test are starting...") # Debug
+
 # 		""" Get Desired Velj """
 # 		get_desired_velj_cli = self.node.create_client(GetDesiredVelj, "aux_control/get_desired_velj")
 # 		get_desired_velj_future = get_desired_velj_cli.call_async(GetDesiredVelj.Request())
 # 		rclpy.spin_until_future_complete(self.node, get_desired_velj_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_desired_velj_future.done(), "aux_control/get_desired_velj service working is not done.")
 # 		get_desired_velj_resp = get_desired_velj_future.result()
-# 		# print(get_desired_velj_resp)
+# 		print(get_desired_velj_resp)
 # 		self.assertTrue(get_desired_velj_resp.success == True, "aux_control/get_desired_velj service is not working correctly.")
 # 		self.node.destroy_client(get_desired_velj_cli)
 
 	
 # 	# Get Desired Velx Test
 # 	def test_get_desired_velx_cli(self):
+# 		print("Get Desired Task Space Velocity Client Test are starting...") # Debug
+
 # 		""" Get Desired Velx """
 # 		get_desired_velx_cli = self.node.create_client(GetDesiredVelx, "aux_control/get_desired_velx")
 # 		get_desired_velx_future = get_desired_velx_cli.call_async(GetDesiredVelx.Request(ref=0))
 # 		rclpy.spin_until_future_complete(self.node, get_desired_velx_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_desired_velx_future.done(), "aux_control/get_desired_velx service working is not done.")
 # 		get_desired_velx_resp = get_desired_velx_future.result()
-# 		# print(get_desired_velx_resp)
+# 		print(get_desired_velx_resp)
 # 		self.assertTrue(get_desired_velx_resp.success == True, "aux_control/get_desired_velx service is not working correctly.")
 # 		self.node.destroy_client(get_desired_velx_cli)
 
 	
 # 	# Get External Torque Test
 # 	def test_get_external_torque_cli(self):
+# 		print("Get External Torque Client Test are starting...") # Debug
+
 # 		""" Get External Torque """
 # 		get_external_torque_cli = self.node.create_client(GetExternalTorque, "aux_control/get_external_torque")
 # 		get_external_torque_future = get_external_torque_cli.call_async(GetExternalTorque.Request())
 # 		rclpy.spin_until_future_complete(self.node, get_external_torque_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_external_torque_future.done(), "aux_control/get_external_torque service working is not done.")
 # 		get_external_torque_resp = get_external_torque_future.result()
-# 		# print(get_external_torque_resp)
+# 		print(get_external_torque_resp)
 # 		self.assertTrue(get_external_torque_resp.success == True, "aux_control/get_external_torque service is not working correctly.")
 # 		self.node.destroy_client(get_external_torque_cli)
 
 
 # 	# Get Orientaion Error Test
 # 	def test_get_orientation_error_cli(self):
+# 		print("Get Orientation Error Client Test are starting...") # Debug
+
 # 		""" Get Orientaion Error """
 # 		get_orientation_error_cli = self.node.create_client(GetOrientationError, "aux_control/get_orientation_error")
 # 		get_orientation_error_req = GetOrientationError.Request()
@@ -1760,13 +1783,15 @@ SRV_CALL_TIMEOUT = 30
 # 		rclpy.spin_until_future_complete(self.node, get_orientation_error_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_orientation_error_future.done(), "aux_control/get_orientation_error service working is not done.")
 # 		get_orientation_error_resp = get_orientation_error_future.result()
-# 		# print(get_orientation_error_resp)
+# 		print(get_orientation_error_resp)
 # 		self.assertTrue(get_orientation_error_resp.success == True, "aux_control/get_orientation_error service is not working correctly.")
 # 		self.node.destroy_client(get_orientation_error_cli)
 
 
 # 	# Get Solution Space Test
 # 	def test_get_solution_space_cli(self):
+# 		print("Get Solution Space Client Test are starting...") # Debug
+
 # 		""" Get Solution Space """
 # 		get_solution_space_cli = self.node.create_client(GetSolutionSpace, "aux_control/get_solution_space")
 # 		get_solution_space_req = GetSolutionSpace.Request()
@@ -1775,13 +1800,15 @@ SRV_CALL_TIMEOUT = 30
 # 		rclpy.spin_until_future_complete(self.node, get_solution_space_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_solution_space_future.done(), "aux_control/get_solution_space service working is not done.")
 # 		get_solution_space_resp = get_solution_space_future.result()
-# 		# print(get_solution_space_resp)
+# 		print(get_solution_space_resp)
 # 		self.assertTrue(get_solution_space_resp.success == True, "aux_control/get_solution_space service is not working correctly.")
 # 		self.node.destroy_client(get_solution_space_cli)
 
 
 # 	# Get Tool Force Test
 # 	def test_get_tool_force_cli(self):
+# 		print("Get Tool Force Client Test are starting...") # Debug
+
 # 		""" Get Tool Force """
 # 		get_tool_force_cli = self.node.create_client(GetToolForce, "aux_control/get_tool_force")
 # 		get_tool_force_req = GetToolForce.Request()
@@ -1790,12 +1817,12 @@ SRV_CALL_TIMEOUT = 30
 # 		rclpy.spin_until_future_complete(self.node, get_tool_force_future, timeout_sec=SRV_CALL_TIMEOUT)
 # 		self.assertTrue(get_tool_force_future.done(), "aux_control/get_tool_force service working is not done.")
 # 		get_tool_force_resp = get_tool_force_future.result()
-# 		# print(get_tool_force_resp)
+# 		print(get_tool_force_resp)
 # 		self.assertTrue(get_tool_force_resp.success == True, "aux_control/get_tool_force service is not working correctly.")
 # 		self.node.destroy_client(get_tool_force_cli)
 
 
-# """ DRL Service Client Test Class """
+""" DRL Service Client Test Class """
 # class TestDsrDRLCli(unittest.TestCase):
 # 	@classmethod
 # 	def setUpClass(cls):
@@ -1848,13 +1875,17 @@ SRV_CALL_TIMEOUT = 30
 # 		rclpy.shutdown()
 
 # 	def setUp(self):
+# 		print("Ready For Test!!")
 # 		TestDsrDRLCli._lock.acquire()
 
 # 	def tearDown(self):
+# 		print("Test Clear!!")
 # 		TestDsrDRLCli._lock.release()
 
 # 	# Get Drl State Test
 # 	def test_drl_get_state_cli(self):
+# 		print("Get Drl State Client Test are starting...") # Debug
+
 # 		""" Drl State """
 # 		get_drl_state_cli = self.node.create_client(GetDrlState, "drl/get_drl_state")
 # 		get_drl_state_future = get_drl_state_cli.call_async(GetDrlState.Request())
@@ -1868,6 +1899,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Get Drl Start Test
 # 	def test_drl_start_cli(self):
+# 		print("Drl Start Client Test are starting...") # Debug
+
 # 		""" Drl Start """
 # 		drl_start_cli = self.node.create_client(DrlStart, "drl/drl_start")
 # 		drl_start_req = DrlStart.Request()
@@ -1881,89 +1914,93 @@ SRV_CALL_TIMEOUT = 30
 # 		self.node.destroy_client(drl_start_cli)
 
 
-# 	# # Get Drl Stop Test
-# 	def test_drl_stop_cli(self):
-# 		""" Drl Start """
-# 		drl_start_cli = self.node.create_client(DrlStart, "drl/drl_start")
-# 		drl_start_req = DrlStart.Request()
-# 		drl_start_req.robot_system = 1
-# 		drl_start_req.code = "Q1 = posj(0,0,0,0,0,0)\nmovej(Q1, vel=10, acc=20)"
-# 		drl_start_future = drl_start_cli.call_async(drl_start_req)
-# 		rclpy.spin_until_future_complete(self.node, drl_start_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(drl_start_future.done(), "drl/drl_start service working is not done.")
-# 		drl_start_resp = drl_start_future.result()
-# 		self.assertTrue(drl_start_resp.success == True, "drl/drl_start service is not working correctly.") # 3 : DRL_RPOGRAM_STATE_LAST, 
-# 		self.node.destroy_client(drl_start_cli)
+	# # Get Drl Stop Test
+	# def test_drl_stop_cli(self):
+	# 	print("Drl Stop Client Test are starting...") # Debug
 
-# 		time.sleep(1)
+	# 	""" Drl Start """
+	# 	drl_start_cli = self.node.create_client(DrlStart, "drl/drl_start")
+	# 	drl_start_req = DrlStart.Request()
+	# 	drl_start_req.robot_system = 1
+	# 	drl_start_req.code = "Q1 = posj(0,0,0,0,0,0)\nmovej(Q1, vel=10, acc=20)"
+	# 	drl_start_future = drl_start_cli.call_async(drl_start_req)
+	# 	rclpy.spin_until_future_complete(self.node, drl_start_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(drl_start_future.done(), "drl/drl_start service working is not done.")
+	# 	drl_start_resp = drl_start_future.result()
+	# 	self.assertTrue(drl_start_resp.success == True, "drl/drl_start service is not working correctly.") # 3 : DRL_RPOGRAM_STATE_LAST, 
+	# 	self.node.destroy_client(drl_start_cli)
 
-# 		""" Drl Stop """
-# 		drl_stop_cli = self.node.create_client(DrlStop, "drl/drl_stop")
-# 		drl_stop_req = DrlStop.Request()
-# 		drl_stop_req.stop_mode = 0
-# 		drl_stop_future = drl_stop_cli.call_async(drl_stop_req)
-# 		rclpy.spin_until_future_complete(self.node, drl_stop_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(drl_stop_future.done(), "drl/drl_stop service working is not done.")
-# 		drl_stop_resp = drl_stop_future.result()
-# 		self.assertTrue(drl_stop_resp.success == True, "drl/drl_stop service is not working correctly.") # 3 : DRL_RPOGRAM_STATE_LAST, 
-# 		self.node.destroy_client(drl_stop_cli)
+	# 	time.sleep(1)
 
-# 		time.sleep(5)
+	# 	""" Drl Stop """
+	# 	drl_stop_cli = self.node.create_client(DrlStop, "drl/drl_stop")
+	# 	drl_stop_req = DrlStop.Request()
+	# 	drl_stop_req.stop_mode = 0
+	# 	drl_stop_future = drl_stop_cli.call_async(drl_stop_req)
+	# 	rclpy.spin_until_future_complete(self.node, drl_stop_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(drl_stop_future.done(), "drl/drl_stop service working is not done.")
+	# 	drl_stop_resp = drl_stop_future.result()
+	# 	self.assertTrue(drl_stop_resp.success == True, "drl/drl_stop service is not working correctly.") # 3 : DRL_RPOGRAM_STATE_LAST, 
+	# 	self.node.destroy_client(drl_stop_cli)
 
-# 		""" Drl State """
-# 		get_drl_state_cli = self.node.create_client(GetDrlState, "drl/get_drl_state")
-# 		get_drl_state_future = get_drl_state_cli.call_async(GetDrlState.Request())
-# 		rclpy.spin_until_future_complete(self.node, get_drl_state_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(get_drl_state_future.done(), "drl/get_drl_state service working is not done.")
-# 		get_drl_state_resp = get_drl_state_future.result()
-# 		print(get_drl_state_resp)
-# 		self.assertTrue((get_drl_state_resp.success == True) and (get_drl_state_resp.drl_state == 1), "drl/get_drl_state service is not working correctly.") # 3 : DRL_RPOGRAM_STATE_LAST, 
-# 		self.node.destroy_client(get_drl_state_cli)
+	# 	time.sleep(5)
 
-
-# 	# # Get Drl Resume Test
-# 	def test_drl_pause_resume_cli(self):
-# 		""" DRL Start """
-# 		drl_start_cli = self.node.create_client(DrlStart, "drl/drl_start")
-# 		drl_start_req = DrlStart.Request()
-# 		drl_start_req.robot_system = 1
-# 		drl_start_req.code = "Q1 = posj(0,0,90,0,90,0)\nmovej(Q1, vel=10, acc=20)"
-# 		drl_start_future = drl_start_cli.call_async(drl_start_req)
-# 		rclpy.spin_until_future_complete(self.node, drl_start_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(drl_start_future.done(), "drl/drl_start service working is not done.")
-# 		drl_start_resp = drl_start_future.result()
-# 		# print(drl_start_resp)
-# 		self.assertTrue(drl_start_resp.success == True, "drl/drl_start service is not working correctly.") # 3 : DRL_RPOGRAM_STATE_LAST, 
-# 		self.node.destroy_client(drl_start_cli)
-
-# 		time.sleep(2) # For Drl Start
-
-# 		""" DRL Pause """
-# 		drl_pause_cli = self.node.create_client(DrlPause, "drl/drl_pause")
-# 		drl_pause_req = DrlPause.Request()
-# 		drl_pause_future = drl_pause_cli.call_async(drl_pause_req)
-# 		rclpy.spin_until_future_complete(self.node, drl_pause_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(drl_pause_future.done(), "drl/drl_pause service working is not done.")
-# 		drl_pause_resp = drl_pause_future.result()
-# 		# print(drl_pause_resp)
-# 		self.assertTrue(drl_pause_resp.success == True, "drl/drl_pause service is not working correctly.") 
-# 		self.node.destroy_client(drl_pause_cli)
-
-# 		time.sleep(2)
-
-# 		""" DRL Resume """
-# 		drl_resume_cli = self.node.create_client(DrlResume, "drl/drl_resume")
-# 		drl_resume_req = DrlResume.Request()
-# 		drl_resume_future = drl_resume_cli.call_async(drl_resume_req)
-# 		rclpy.spin_until_future_complete(self.node, drl_resume_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 		self.assertTrue(drl_resume_future.done(), "drl/drl_resume service working is not done.")
-# 		drl_resume_resp = drl_resume_future.result()
-# 		# print(drl_resume_resp)
-# 		self.assertTrue(drl_resume_resp.success == True, "drl/drl_resume service is not working correctly.") 
-# 		self.node.destroy_client(drl_resume_cli)
+	# 	""" Drl State """
+	# 	get_drl_state_cli = self.node.create_client(GetDrlState, "drl/get_drl_state")
+	# 	get_drl_state_future = get_drl_state_cli.call_async(GetDrlState.Request())
+	# 	rclpy.spin_until_future_complete(self.node, get_drl_state_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(get_drl_state_future.done(), "drl/get_drl_state service working is not done.")
+	# 	get_drl_state_resp = get_drl_state_future.result()
+	# 	print(get_drl_state_resp)
+	# 	self.assertTrue((get_drl_state_resp.success == True) and (get_drl_state_resp.drl_state == 1), "drl/get_drl_state service is not working correctly.") # 3 : DRL_RPOGRAM_STATE_LAST, 
+	# 	self.node.destroy_client(get_drl_state_cli)
 
 
-# """ Tool Service Client Test Class """
+	# # Get Drl Resume Test
+	# def test_drl_pause_resume_cli(self):
+	# 	print("Drl Pause And Resume Client Test are starting...") # Debug
+
+	# 	""" DRL Start """
+	# 	drl_start_cli = self.node.create_client(DrlStart, "drl/drl_start")
+	# 	drl_start_req = DrlStart.Request()
+	# 	drl_start_req.robot_system = 1
+	# 	drl_start_req.code = "Q1 = posj(0,0,90,0,90,0)\nmovej(Q1, vel=10, acc=20)"
+	# 	drl_start_future = drl_start_cli.call_async(drl_start_req)
+	# 	rclpy.spin_until_future_complete(self.node, drl_start_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(drl_start_future.done(), "drl/drl_start service working is not done.")
+	# 	drl_start_resp = drl_start_future.result()
+	# 	# print(drl_start_resp)
+	# 	self.assertTrue(drl_start_resp.success == True, "drl/drl_start service is not working correctly.") # 3 : DRL_RPOGRAM_STATE_LAST, 
+	# 	self.node.destroy_client(drl_start_cli)
+
+	# 	time.sleep(2) # For Drl Start
+
+	# 	""" DRL Pause """
+	# 	drl_pause_cli = self.node.create_client(DrlPause, "drl/drl_pause")
+	# 	drl_pause_req = DrlPause.Request()
+	# 	drl_pause_future = drl_pause_cli.call_async(drl_pause_req)
+	# 	rclpy.spin_until_future_complete(self.node, drl_pause_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(drl_pause_future.done(), "drl/drl_pause service working is not done.")
+	# 	drl_pause_resp = drl_pause_future.result()
+	# 	# print(drl_pause_resp)
+	# 	self.assertTrue(drl_pause_resp.success == True, "drl/drl_pause service is not working correctly.") 
+	# 	self.node.destroy_client(drl_pause_cli)
+
+	# 	time.sleep(2)
+
+	# 	""" DRL Resume """
+	# 	drl_resume_cli = self.node.create_client(DrlResume, "drl/drl_resume")
+	# 	drl_resume_req = DrlResume.Request()
+	# 	drl_resume_future = drl_resume_cli.call_async(drl_resume_req)
+	# 	rclpy.spin_until_future_complete(self.node, drl_resume_future, timeout_sec=SRV_CALL_TIMEOUT)
+	# 	self.assertTrue(drl_resume_future.done(), "drl/drl_resume service working is not done.")
+	# 	drl_resume_resp = drl_resume_future.result()
+	# 	# print(drl_resume_resp)
+	# 	self.assertTrue(drl_resume_resp.success == True, "drl/drl_resume service is not working correctly.") 
+	# 	self.node.destroy_client(drl_resume_cli)
+
+
+""" Tool Service Client Test Class """
 # class TestDsrToolCli(unittest.TestCase):
 # 	@classmethod
 # 	def setUpClass(cls):
@@ -2016,13 +2053,17 @@ SRV_CALL_TIMEOUT = 30
 # 		rclpy.shutdown()
 
 # 	def setUp(self):
+# 		print("Ready For Test!!")
 # 		TestDsrToolCli._lock.acquire()
 
 # 	def tearDown(self):
+# 		print("Test Clear!!")
 # 		TestDsrToolCli._lock.release()
 
 # 	# Get Current Tool Test
 # 	def test_get_current_tool_cli(self):
+# 		print("Get Current Tool Client Test are starting...") # Debug
+
 # 		""" Get Current Tool """
 # 		get_current_tool_cli = self.node.create_client(GetCurrentTool, "tool/get_current_tool")
 # 		get_current_tool_future = get_current_tool_cli.call_async(GetCurrentTool.Request())
@@ -2035,6 +2076,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set Tool Shape Test
 # 	def test_set_tool_shape_cli(self):
+# 		print("Set Tool Shape Client Test are starting...") # Debug
+
 # 		""" Set Tool Shape """
 # 		set_tool_shape_cli = self.node.create_client(SetToolShape, "tool/set_tool_shape")
 # 		set_tool_shape_future = set_tool_shape_cli.call_async(SetToolShape.Request(name="tool_shape1"))
@@ -2047,6 +2090,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set Current Tool  Test
 # 	def test_set_current_tool_cli(self):
+# 		print("Set Current Tool Client Test are starting...") # Debug
+
 # 		""" Set Current Tool """
 # 		set_current_tool_cli = self.node.create_client(SetCurrentTool, "tool/set_current_tool")
 # 		set_current_tool_future = set_current_tool_cli.call_async(SetCurrentTool.Request(name="tool1"))
@@ -2071,6 +2116,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Config Create Tool  Test
 # 	def test_config_create_tool_cli(self):
+# 		print("Configuration Create Tool Client Test are starting...") # Debug
+
 # 		""" Set Current Tool """
 # 		config_create_tool_cli = self.node.create_client(ConfigCreateTool, "tool/config_create_tool")
 # 		config_create_tool_req = ConfigCreateTool.Request()
@@ -2087,6 +2134,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Config Delete Tool Test
 # 	def test_config_delete_tool_cli(self):
+# 		print("Configuration Delete Tool Client Test are starting...") # Debug
+
 # 		""" Config Create Tool """
 # 		config_create_tool_cli = self.node.create_client(ConfigCreateTool, "tool/config_create_tool")
 # 		config_create_tool_req = ConfigCreateTool.Request()
@@ -2113,7 +2162,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.node.destroy_client(config_delete_tool_resp)
 
 
-# """ Force Service Client Test Class """
+""" Force Service Client Test Class """
 # class TestDsrForceCtrlCli(unittest.TestCase):
 # 	@classmethod
 # 	def setUpClass(cls):
@@ -2166,14 +2215,18 @@ SRV_CALL_TIMEOUT = 30
 # 		rclpy.shutdown()
 
 # 	def setUp(self):
+# 		print("Ready For Test!!")
 # 		TestDsrForceCtrlCli._lock.acquire()
 
 # 	def tearDown(self):
+# 		print("Test Clear")
 # 		TestDsrForceCtrlCli._lock.release()
-	
+
 
 # 	# Align Axis 1 Test
 # 	def test_align_axis_1_cli(self):
+# 		print("Align Axis 1 Client Test are starting...") # Debug
+
 # 		""" Move Joint """
 # 		move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
 # 		target_pos = [0.0, 0.0, 45.0, 0.0, 90.0, 0.0]
@@ -2186,8 +2239,6 @@ SRV_CALL_TIMEOUT = 30
 # 		move_resp = move_future.result()
 # 		self.assertTrue(move_resp.success == True, "motion/move joint response")
 # 		self.node.destroy_client(move_cli)
-
-# 		time.sleep(10)
 
 # 		""" Align Axis 1 """
 # 		x1 = [0.0, 500.0, 700.0, 30.0, 0.0, 0.0]
@@ -2244,6 +2295,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Align Axis 2 Test
 # 	def test_align_axis_2_cli(self):
+# 		print("Align Axis 2 Client Test are starting...") # Debug
+
 # 		""" Move Joint """
 # 		move_cli = self.node.create_client(MoveJoint, "motion/move_joint")
 # 		target_pos = [0.0, 0.0, 45.0, 0.0, 90.0, 0.0]
@@ -2256,8 +2309,6 @@ SRV_CALL_TIMEOUT = 30
 # 		move_resp = move_future.result()
 # 		self.assertTrue(move_resp.success == True, "motion/move joint response")
 # 		self.node.destroy_client(move_cli)
-
-# 		time.sleep(10)
 
 # 		""" Align Axis 2 """
 # 		align_axis_2_cli = self.node.create_client(AlignAxis2, "force/align_axis2")
@@ -2306,6 +2357,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set User Cartesian Coordinate 1 Test
 # 	def test_set_user_cart_coord1_cli(self):
+# 		print("Set User Cartesian Coordinate 1 Client Test are starting...") # Debug
+
 # 		""" Set User Cartesian Coordinate 1 """
 # 		task_pos = [500.0, 30.0, 500.0, 0.0, 0.0, 0.0]
 # 		set_user_cart_coord1_cli = self.node.create_client(SetUserCartCoord1, "force/set_user_cart_coord1")
@@ -2345,6 +2398,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set User Cartesian Coordinate 2 Test
 # 	def test_set_user_cart_coord2_cli(self):
+# 		print("Set User Cartesian Coordinate 2 Client Test are starting...") # Debug
+
 # 		""" Set User Cartesian Coordinate 2 """
 # 		x1 = [0.0, 500.0, 700.0, 0.0, 0.0, 0.0]
 # 		x2 = [500.0, 0.0, 700.0, 0.0, 0.0, 0.0]
@@ -2389,6 +2444,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set User Cartesian Coordinate 3 Test
 # 	def test_set_user_cart_coord3_cli(self):
+# 		print("Set User Cartesian Coordinate 3 Client Test are starting...") # Debug
+
 # 		""" Set User Cartesian Coordinate 3 """
 # 		u1 = [1.0, 1.0, 0.0]
 # 		v1 = [-1.0, 1.0, 0.0]
@@ -2431,6 +2488,8 @@ SRV_CALL_TIMEOUT = 30
 	
 # 	# Over Write User Cartesian Coordinate
 # 	def test_overwrite_user_cart_coord_cli(self):
+# 		print("Overwrite User Cartesian Coordinate Client Test are starting...") # Debug
+
 # 		""" Set User Cartesian Coordinate 1 """
 # 		task_pos = [30.0, 40.0, 50.0, 0.0, 0.0, 0.0]
 # 		set_user_cart_coord1_cli = self.node.create_client(SetUserCartCoord1, "force/set_user_cart_coord1")
@@ -2487,59 +2546,65 @@ SRV_CALL_TIMEOUT = 30
 	
 # 	""" TODO : Operating in API but not operating in ROS 2 """
 # 	# Calculate Coordinate Test
-# 	# def test_calc_coord_cli(self):
-# 	# 	""" Calc Coord for One input pose """
-# 	# 	x1 = [500.0, 30.0, 500.0, 0.0, 0.0, 0.0]
-# 	# 	x2 = [400.0, 30.0, 500.0, 0.0, 0.0, 0.0]
-# 	# 	x3 = [500.0, 30.0, 600.0, 45.0, 180.0, 45.0]
-# 	# 	x4 = [500.0, -30.0, 600.0, 0.0, 180.0, 0.0]
+# 	def test_calc_coord_cli(self):
+# 		print("Calculate Coordinate Client Test are starting...") # Debug
 
-# 	# 	calc_coord_cli = self.node.create_client(CalcCoord, "force/calc_coord")
-# 	# 	calc_coord_cli_req = CalcCoord.Request()
-# 	# 	calc_coord_cli_req.input_pos_cnt = 4
-# 	# 	calc_coord_cli_req.x1 = x1
-# 	# 	calc_coord_cli_req.x2 = x2
-# 	# 	calc_coord_cli_req.x3 = x3
-# 	# 	calc_coord_cli_req.x4 = x4
-# 	# 	calc_coord_cli_req.ref = 0
-# 	# 	calc_coord_cli_future = calc_coord_cli.call_async(calc_coord_cli_req)
-# 	# 	rclpy.spin_until_future_complete(self.node, calc_coord_cli_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 	# 	self.assertTrue(calc_coord_cli_future.done(), "force/calc_coord service working is not done.")
-# 	# 	calc_coord_cli_resp = calc_coord_cli_future.result()
-# 	# 	self.assertTrue(calc_coord_cli_resp.success == True, "force/calc_coord service is not working correctly.")
-# 	# 	self.node.destroy_client(calc_coord_cli)
+# 		""" Calc Coord for One input pose """
+# 		x1 = [500.0, 30.0, 500.0, 0.0, 0.0, 0.0]
+# 		x2 = [400.0, 30.0, 500.0, 0.0, 0.0, 0.0]
+# 		x3 = [500.0, 30.0, 600.0, 45.0, 180.0, 45.0]
+# 		x4 = [500.0, -30.0, 600.0, 0.0, 180.0, 0.0]
+
+# 		calc_coord_cli = self.node.create_client(CalcCoord, "force/calc_coord")
+# 		calc_coord_cli_req = CalcCoord.Request()
+# 		calc_coord_cli_req.input_pos_cnt = 4
+# 		calc_coord_cli_req.x1 = x1
+# 		calc_coord_cli_req.x2 = x2
+# 		calc_coord_cli_req.x3 = x3
+# 		calc_coord_cli_req.x4 = x4
+# 		calc_coord_cli_req.ref = 0
+# 		calc_coord_cli_future = calc_coord_cli.call_async(calc_coord_cli_req)
+# 		rclpy.spin_until_future_complete(self.node, calc_coord_cli_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(calc_coord_cli_future.done(), "force/calc_coord service working is not done.")
+# 		calc_coord_cli_resp = calc_coord_cli_future.result()
+# 		self.assertTrue(calc_coord_cli_resp.success == True, "force/calc_coord service is not working correctly.")
+# 		self.node.destroy_client(calc_coord_cli)
 	
-# 	# 	time.sleep(5)
+# 		time.sleep(5)
 
-# 	# 	# Check Coordinate
-# 	# 	expected_result = [500, -30, 600, 90, 90, 90]
-# 	# 	print(calc_coord_cli_resp.conv_posx) # Debug
-# 	# 	self.assertAlmostEqual(expected_result[0], calc_coord_cli_resp.conv_posx[0], delta=0.1)
-# 	# 	self.assertAlmostEqual(expected_result[1], calc_coord_cli_resp.conv_posx[1], delta=0.1)
-# 	# 	self.assertAlmostEqual(expected_result[2], calc_coord_cli_resp.conv_posx[2], delta=0.1)
-# 	# 	self.assertAlmostEqual(expected_result[3], calc_coord_cli_resp.conv_posx[3], delta=0.1)
-# 	# 	self.assertAlmostEqual(expected_result[4], calc_coord_cli_resp.conv_posx[4], delta=0.1)
-# 	# 	self.assertAlmostEqual(expected_result[5], calc_coord_cli_resp.conv_posx[5], delta=0.1)
+# 		# Check Coordinate
+# 		expected_result = [500, -30, 600, 90, 90, 90]
+# 		print(calc_coord_cli_resp.conv_posx) # Debug
+# 		self.assertAlmostEqual(expected_result[0], calc_coord_cli_resp.conv_posx[0], delta=0.1)
+# 		self.assertAlmostEqual(expected_result[1], calc_coord_cli_resp.conv_posx[1], delta=0.1)
+# 		self.assertAlmostEqual(expected_result[2], calc_coord_cli_resp.conv_posx[2], delta=0.1)
+# 		self.assertAlmostEqual(expected_result[3], calc_coord_cli_resp.conv_posx[3], delta=0.1)
+# 		self.assertAlmostEqual(expected_result[4], calc_coord_cli_resp.conv_posx[4], delta=0.1)
+# 		self.assertAlmostEqual(expected_result[5], calc_coord_cli_resp.conv_posx[5], delta=0.1)
 	
 # 	""" TODO : Operating in API but not operating in ROS 2 """
 # 	# Check Force Condition Test
-#	# def test_check_force_condition_cli(self):
-#	# 	check_force_cond_cli = self.node.create_client(CheckForceCondition, "force/check_force_condition")
-#	# 	check_force_cond_req = CheckForceCondition.Request()
-#	# 	check_force_cond_req.axis = 2
-#	# 	check_force_cond_req.min = 5.0
-#	# 	check_force_cond_req.max = 10.0
-#	# 	check_force_cond_req.ref = 2
-#	# 	check_force_cond_future = check_force_cond_cli.call_async(check_force_cond_req)
-#	# 	rclpy.spin_until_future_complete(self.node, check_force_cond_future, timeout_sec=SRV_CALL_TIMEOUT)
-#	# 	self.assertTrue(check_force_cond_future.done(), "force/check_force_condition service working is not done.")
-#	# 	check_force_cond_resp = check_force_cond_future.result()
-#	# 	self.assertTrue(check_force_cond_resp.success == True, "force/check_force_condition service is not working correctly.")
-#	# 	self.node.destroy_client(check_force_cond_cli)
+# 	def test_check_force_condition_cli(self):
+# 		print("Check Force Condition Client Test are starting...") # Debug
+
+# 		check_force_cond_cli = self.node.create_client(CheckForceCondition, "force/check_force_condition")
+# 		check_force_cond_req = CheckForceCondition.Request()
+# 		check_force_cond_req.axis = 2
+# 		check_force_cond_req.min = 5.0
+# 		check_force_cond_req.max = 10.0
+# 		check_force_cond_req.ref = 2
+# 		check_force_cond_future = check_force_cond_cli.call_async(check_force_cond_req)
+# 		rclpy.spin_until_future_complete(self.node, check_force_cond_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(check_force_cond_future.done(), "force/check_force_condition service working is not done.")
+# 		check_force_cond_resp = check_force_cond_future.result()
+# 		self.assertTrue(check_force_cond_resp.success == True, "force/check_force_condition service is not working correctly.")
+# 		self.node.destroy_client(check_force_cond_cli)
 
 
 # 	# Check Orientation Condition 1 Test
 # 	def test_check_orientation_condition1_cli(self):
+# 		print("Check Orientation Condition 1 Client Test are starting...") # Debug
+
 # 		""" Move JointX """
 # 		cli = self.node.create_client(MoveJointx, "motion/move_jointx")
 # 		target_pos = [400.0, 500.0, 800.0, 0.0, 180.0, 40.0]
@@ -2554,7 +2619,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.assertTrue(resp.success == True, "motion/move_jointx response")
 # 		self.node.destroy_client(cli)
 
-# 		time.sleep(10)
+# 		# time.sleep(10)
 
 # 		""" Check Orientation Condition 1 """
 # 		check_ori_cond_cli = self.node.create_client(CheckOrientationCondition1,"force/check_orientation_condition1")
@@ -2572,6 +2637,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Check Orientation Condition 2 Test
 # 	def test_check_orientation_condition2_cli(self):
+# 		print("Check Orientation Condition 2 Client Test are starting...") # Debug
+
 # 		""" Move JointX """
 # 		cli = self.node.create_client(MoveJointx, "motion/move_jointx")
 # 		target_pos = [400.0, 500.0, 800.0, 0.0, 180.0, 40.0]
@@ -2586,7 +2653,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.assertTrue(resp.success == True, "motion/move_jointx response")
 # 		self.node.destroy_client(cli)
 
-# 		time.sleep(10)
+# 		# time.sleep(10)
 
 # 		""" Check Orientation Condition 2 """
 # 		check_ori_cond2_cli = self.node.create_client(CheckOrientationCondition2,"force/check_orientation_condition2")
@@ -2605,6 +2672,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Check Position Condition Test
 # 	def test_check_position_condition_cli(self):
+# 		print("Check Position Condition Client Test are starting...") # Debug
+
 # 		""" Move JointX """
 # 		cli = self.node.create_client(MoveJointx, "motion/move_jointx")
 # 		target_pos = [400.0, 500.0, 800.0, 0.0, 180.0, 40.0]
@@ -2619,7 +2688,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.assertTrue(resp.success == True, "motion/move_jointx response")
 # 		self.node.destroy_client(cli)
 
-# 		time.sleep(10)
+# 		# time.sleep(10)
 
 # 		""" Check Position Condition """
 # 		check_pos_cond_cli = self.node.create_client(CheckPositionCondition,"force/check_position_condition")
@@ -2638,37 +2707,41 @@ SRV_CALL_TIMEOUT = 30
 
 # 	""" TODO : Do not create Coordinate Transform Result """
 # 	# Coordinate Transform Test
-# 	# def test_coord_trans_cli(self):
-# 	# 	""" Coordinate Trasform """
-# 	# 	base_pose = [400.0, 500.0, 800.0, 0.0, 180.0, 15.0]
-
-# 	# 	coord_trans_cli = self.node.create_client(CoordTransform, "force/coord_transform")
-# 	# 	coord_trans_req = CoordTransform.Request()
-# 	# 	coord_trans_req.pos_in = base_pose
-# 	# 	coord_trans_req.ref_in = 0
-# 	# 	coord_trans_req.ref_out = 1
-# 	# 	coord_trans_future = coord_trans_cli.call_async(coord_trans_req)
-# 	# 	rclpy.spin_until_future_complete(self.node, coord_trans_future, timeout_sec=SRV_CALL_TIMEOUT)
-# 	# 	self.assertTrue(coord_trans_future.done(), "force/coord_transform service working is not done.")
-# 	# 	coord_trans_resp = coord_trans_future.result()
-# 	# 	self.assertTrue(coord_trans_resp.success == True, "force/coord_transform service is not working correctly.")
-# 	# 	self.node.destroy_client(coord_trans_cli)
+# 	def test_coord_trans_cli(self):
+# 		print("Coordinate Transform Client Test are starting...") # Debug
 	
-# 	# 	# Check Result
-# 	# 	resp_coord = coord_trans_resp.conv_posx
-# 	# 	print(resp_coord) # Debug
-# 	# 	result_coord = [400.0, 465.0, -652.5, 0.0, 180.0, 15.0] # Pre Calculate
+# 		""" Coordinate Trasform """
+# 		base_pose = [400.0, 500.0, 800.0, 0.0, 180.0, 15.0]
+
+# 		coord_trans_cli = self.node.create_client(CoordTransform, "force/coord_transform")
+# 		coord_trans_req = CoordTransform.Request()
+# 		coord_trans_req.pos_in = base_pose
+# 		coord_trans_req.ref_in = 0
+# 		coord_trans_req.ref_out = 1
+# 		coord_trans_future = coord_trans_cli.call_async(coord_trans_req)
+# 		rclpy.spin_until_future_complete(self.node, coord_trans_future, timeout_sec=SRV_CALL_TIMEOUT)
+# 		self.assertTrue(coord_trans_future.done(), "force/coord_transform service working is not done.")
+# 		coord_trans_resp = coord_trans_future.result()
+# 		self.assertTrue(coord_trans_resp.success == True, "force/coord_transform service is not working correctly.")
+# 		self.node.destroy_client(coord_trans_cli)
+	
+# 		# Check Result
+# 		resp_coord = coord_trans_resp.conv_posx
+# 		print(resp_coord) # Debug
+# 		result_coord = [400.0, 465.0, -652.5, 0.0, 180.0, 15.0] # Pre Calculate
 		
-# 	# 	self.assertAlmostEqual(result_coord[0], resp_coord[0],delta=0.1)
-# 	# 	self.assertAlmostEqual(result_coord[1], resp_coord[1],delta=0.1)
-# 	# 	self.assertAlmostEqual(result_coord[2], resp_coord[2],delta=0.1)
-# 	# 	self.assertAlmostEqual(result_coord[3], resp_coord[3],delta=0.1)
-# 	# 	self.assertAlmostEqual(result_coord[4], resp_coord[4],delta=0.1)
-# 	# 	self.assertAlmostEqual(result_coord[5], resp_coord[5],delta=0.1)
+# 		self.assertAlmostEqual(result_coord[0], resp_coord[0],delta=0.1)
+# 		self.assertAlmostEqual(result_coord[1], resp_coord[1],delta=0.1)
+# 		self.assertAlmostEqual(result_coord[2], resp_coord[2],delta=0.1)
+# 		self.assertAlmostEqual(result_coord[3], resp_coord[3],delta=0.1)
+# 		self.assertAlmostEqual(result_coord[4], resp_coord[4],delta=0.1)
+# 		self.assertAlmostEqual(result_coord[5], resp_coord[5],delta=0.1)
 
 
 # 	# Get Work Piece Weight Test 
 # 	def test_get_workpiece_weight_cli(self):
+# 		print("Get Workpiece Weight Client Test are starting...") # Debug
+
 # 		""" Get Work Piece Weight """
 # 		get_workpiece_weight_cli = self.node.create_client(GetWorkpieceWeight, "force/get_workpiece_weight")
 # 		get_workpiece_weight_future = get_workpiece_weight_cli.call_async(GetWorkpieceWeight.Request())
@@ -2681,6 +2754,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Reset Workpiece Weight Test
 # 	def test_reset_workpiece_weight_cli(self):
+# 		print("Reset Workpiece Weight Client Test are starting...") # Debug
+
 # 		""" Reset Workpiece Weight """
 # 		reset_workpiece_weight_cli = self.node.create_client(ResetWorkpieceWeight, "force/reset_workpiece_weight")
 # 		reset_workpiece_weight_future = reset_workpiece_weight_cli.call_async(ResetWorkpieceWeight.Request())
@@ -2693,6 +2768,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Is Done Bolt Tightening Test
 # 	def test_is_done_bolt_tightening_cli(self):
+# 		print("Is Done Bolt Tightening Client Test are starting...") # Debug
+
 # 		""" Move Joint """
 # 		cli = self.node.create_client(MoveJoint, "motion/move_joint")
 # 		target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
@@ -2706,7 +2783,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.assertTrue(resp.success == True, "motion/move_joint service is not working correctly.")
 # 		self.node.destroy_client(cli)
 
-# 		time.sleep(10)
+# 		# time.sleep(10)
 
 # 		""" Taks Compliance Control """
 # 		task_compliance_ctrl_cli = self.node.create_client(TaskComplianceCtrl, "force/task_compliance_ctrl")
@@ -2767,6 +2844,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Parallel Axis 1 Test
 # 	def test_parallel_axis1_cli(self):
+# 		print("Parallel Axis 1 Client Test are starting...") # Debug
+
 # 		""" Move Joint """
 # 		cli = self.node.create_client(MoveJoint, "motion/move_joint")
 # 		target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
@@ -2780,7 +2859,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.assertTrue(resp.success == True, "motion/move_joint service is not working correctly.")
 # 		self.node.destroy_client(cli)
 
-# 		time.sleep(10)
+# 		# time.sleep(10)
 
 # 		""" Parallel Axis 1 """
 # 		parallel_axis1_cli = self.node.create_client(ParallelAxis1, "force/parallel_axis1")
@@ -2813,6 +2892,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Parallel Axis 2 Test
 # 	def test_parallel_axis2_cli(self):
+# 		print("Parallel Axis 2 Client Test are starting...") # Debug
+
 # 		""" Move Joint """
 # 		cli = self.node.create_client(MoveJoint, "motion/move_joint")
 # 		target_pos = [0.0, 0.0, 90.0, 0.0, 90.0, 0.0]
@@ -2826,7 +2907,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.assertTrue(resp.success == True, "motion/move_joint service is not working correctly.")
 # 		self.node.destroy_client(cli)
 
-# 		time.sleep(10)
+# 		# time.sleep(10)
 
 # 		""" Parallel Axis 2 """
 # 		parallel_axis2_cli = self.node.create_client(ParallelAxis2, "force/parallel_axis2")
@@ -2857,6 +2938,8 @@ SRV_CALL_TIMEOUT = 30
 	
 # 	# Set Desired Force Test
 # 	def test_set_desired_force_cli(self):
+# 		print("Set Desired Force Client Test are starting...") # Debug
+
 # 		""" Set Desired Force """
 # 		set_desired_force_cli = self.node.create_client(SetDesiredForce, "force/set_desired_force")
 # 		set_desired_force_req = SetDesiredForce.Request()
@@ -2875,6 +2958,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Release Force Test
 # 	def test_release_force_cli(self):
+# 		print("Release Force Client Test are starting...") # Debug
+
 # 		""" Release Force """
 # 		release_force_cli = self.node.create_client(ReleaseForce, "force/release_force")
 # 		release_force_req = ReleaseForce.Request()
@@ -2889,6 +2974,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Task Compliance Control Test
 # 	def test_task_compliance_ctrl_cli(self):
+# 		print("Task Compliance Control Client Test are starting...") # Debug
+
 # 		""" Task Compliance Control """
 # 		task_compliance_ctrl_cli = self.node.create_client(TaskComplianceCtrl, "force/task_compliance_ctrl")
 # 		task_compliance_ctrl_req = TaskComplianceCtrl.Request()
@@ -2905,6 +2992,8 @@ SRV_CALL_TIMEOUT = 30
 	
 # 	# Release Compliance Control Test 
 # 	def test_release_compliance_ctrl_cli(self):
+# 		print("Release Compliance Control Client Test are starting...") # Debug
+
 # 		""" Release Compliance Control """
 # 		release_compliance_ctrl_cli = self.node.create_client(ReleaseComplianceCtrl, "force/release_compliance_ctrl")
 # 		release_compliance_ctrl_future = release_compliance_ctrl_cli.call_async(ReleaseComplianceCtrl.Request())
@@ -2917,6 +3006,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set Stiffnessx Test
 # 	def test_set_stiffnessx_cli(self):
+# 		print("Set Stiffness Client Test are starting...") # Debug
+
 # 		""" Set Stiffnessx """
 # 		set_stiffnessx_cli = self.node.create_client(SetStiffnessx, "force/set_stiffnessx")
 # 		set_stiffnessx_req = SetStiffnessx.Request()
@@ -2931,7 +3022,7 @@ SRV_CALL_TIMEOUT = 30
 # 		self.node.destroy_client(set_stiffnessx_cli)
 
 
-# """ Gripper Service Client Test Class """
+""" Gripper Service Client Test Class """
 # class TestDsrGripperCli(unittest.TestCase):
 # 	@classmethod
 # 	def setUpClass(cls):
@@ -2983,8 +3074,16 @@ SRV_CALL_TIMEOUT = 30
 # 		cls.spawner_script.send_signal(signal.SIGINT)
 # 		rclpy.shutdown()
 
+# 	def setUp(self):
+# 		print("Ready For Test!!")
+# 		TestDsrGripperCli._lock.acquire()
 
-# """ IO Control Service Client Test Class """
+# 	def tearDown(self):
+# 		print("Test Clear!!")
+# 		TestDsrGripperCli._lock.release()
+
+
+""" IO Control Service Client Test Class """
 # class TestDsrIOCtrlCli(unittest.TestCase):
 # 	@classmethod
 # 	def setUpClass(cls):
@@ -3036,8 +3135,18 @@ SRV_CALL_TIMEOUT = 30
 # 		cls.spawner_script.send_signal(signal.SIGINT)
 # 		rclpy.shutdown()
 
+# 	def setUp(self):
+# 		print("Ready For Test!!")
+# 		TestDsrIOCtrlCli._lock.acquire()
+
+# 	def tearDown(self):
+# 		print("Test Clear!!")
+# 		TestDsrIOCtrlCli._lock.release()
+
 # 	# Set Control Box Analog Input Type
 # 	def test_set_ctrl_box_analog_input_type_cli(self):
+# 		print("Set Control Box Analog Input Type Client Test are starting...") # Debug
+
 # 		""" Set Control Box Analog Input Type """
 # 		set_crtl_box_analog_input_type_cli = self.node.create_client(SetCtrlBoxAnalogInputType, "io/set_ctrl_box_analog_input_type")
 # 		set_crtl_box_analog_input_type_req = SetCtrlBoxAnalogInputType.Request()
@@ -3053,6 +3162,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Get Control Box Analog Input
 # 	def test_get_ctrl_box_analog_input_cli(self):
+# 		print("Get Control Box Analog Input Client Test are starting...") # Debug
+
 # 		""" Set Control Box Analog Input Type """
 # 		set_crtl_box_analog_input_type_cli = self.node.create_client(SetCtrlBoxAnalogInputType, "io/set_ctrl_box_analog_input_type")
 # 		set_crtl_box_analog_input_type_req = SetCtrlBoxAnalogInputType.Request()
@@ -3081,6 +3192,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set Control Box Analog Output Type Test
 # 	def test_set_ctrl_box_analog_output_type_cli(self):
+# 		print("Set Control Box Analog Output Type Client Test are starting...") # Debug
+
 # 		""" Set Control Box Analog Output Type """
 # 		set_crtl_box_analog_output_type_cli = self.node.create_client(SetCtrlBoxAnalogOutputType, "io/set_ctrl_box_analog_output_type")
 # 		set_crtl_box_analog_output_type_req = SetCtrlBoxAnalogOutputType.Request()
@@ -3096,6 +3209,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set Control Box Analog Output Test
 # 	def test_set_ctrl_box_analog_ouputput_cli(self):
+# 		print("Set Control Box Analog Output Client Test are starting...") # Debug
+
 # 		""" Set Control Box Analog Output Type """
 # 		set_crtl_box_analog_output_type_cli = self.node.create_client(SetCtrlBoxAnalogOutputType, "io/set_ctrl_box_analog_output_type")
 # 		set_crtl_box_analog_output_type_req = SetCtrlBoxAnalogOutputType.Request()
@@ -3125,6 +3240,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set Control Box Digital Output Test
 # 	def test_set_ctrl_box_digital_output_cli(self):
+# 		print("Set Control Box Digital Output Client Test are starting...") # Debug
+
 # 		""" Set Control Box Digital Output """
 # 		set_ctrl_box_digital_output_cli = self.node.create_client(SetCtrlBoxDigitalOutput, "io/set_ctrl_box_digital_output")
 # 		set_ctrl_box_digital_output_req = SetCtrlBoxDigitalOutput.Request()
@@ -3140,6 +3257,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Set Tool Digital Output Test
 # 	def test_set_tool_digital_output_cli(self):
+# 		print("Set Tool Digital Output Client Test are starting...") # Debug
+
 # 		""" Set Tool Digital Output """
 # 		set_tool_digital_output_cli = self.node.create_client(SetToolDigitalOutput, "io/set_tool_digital_output")
 # 		set_tool_digital_output_req = SetToolDigitalOutput.Request()
@@ -3155,6 +3274,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Get Control Box Digital Input Test
 # 	def test_get_ctrl_box_digital_input_cli(self):
+# 		print("Get Control Box Digital Input Client Test are starting...") # Debug
+
 # 		""" Get Control Box Digital Input """
 # 		get_ctrl_box_digital_input_cli = self.node.create_client(GetCtrlBoxDigitalInput, "io/get_ctrl_box_digital_input")
 # 		get_ctrl_box_digital_input_req = GetCtrlBoxDigitalInput.Request()
@@ -3169,6 +3290,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Get Control Box Digital Output Test
 # 	def test_get_ctrl_box_digital_output_cli(self):
+# 		print("Get Control Box Digital Output Client Test are starting...") # Debug
+
 # 		""" Get Control Box Digital Input """
 # 		get_ctrl_box_digital_output_cli = self.node.create_client(GetCtrlBoxDigitalOutput, "io/get_ctrl_box_digital_output")
 # 		get_ctrl_box_digital_output_req = GetCtrlBoxDigitalOutput.Request()
@@ -3183,6 +3306,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Get Tool Digital Input Test
 # 	def test_get_tool_digital_input_cli(self):
+# 		print("Get Tool Digital Input Client Test are starting...") # Debug
+
 # 		""" Get Tool Digital Input """
 # 		get_tool_digital_input_cli = self.node.create_client(GetToolDigitalInput, "io/get_tool_digital_input")
 # 		get_tool_digital_input_req = GetToolDigitalInput.Request()
@@ -3197,6 +3322,8 @@ SRV_CALL_TIMEOUT = 30
 
 # 	# Get Tool Digital Output Test 
 # 	def test_get_tool_digital_output_cli(self):
+# 		print("Get Tool Digital Output Client Test are starting...") # Debug
+
 # 		""" Get Tool Digital Output """
 # 		get_tool_digital_output_cli = self.node.create_client(GetToolDigitalOutput, "io/get_tool_digital_output")
 # 		get_tool_digital_output_req = GetToolDigitalOutput.Request()
@@ -3325,9 +3452,19 @@ class TestDsrTCPCtrlCli(unittest.TestCase):
 		cls.bringup_script.send_signal(signal.SIGINT)
 		cls.spawner_script.send_signal(signal.SIGINT)
 		rclpy.shutdown()
+		
+	def setUp(self):
+		print("Ready For Test!!")
+		TestDsrTCPCtrlCli._lock.acquire()
+
+	def tearDown(self):
+		print("Test Clear!!")
+		TestDsrTCPCtrlCli._lock.release()
 
 	# Configure Create TCP Test
 	def test_config_create_tcp_cli(self):
+		print("Create TCP Configuration Client Test are starting...") # Debug
+
 		""" Config Create TCP """
 		config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
 		config_create_tcp_req = ConfigCreateTcp.Request()
@@ -3343,6 +3480,8 @@ class TestDsrTCPCtrlCli(unittest.TestCase):
 	
 	# Set Current TCP Test
 	def test_set_current_tcp_cli(self):
+		print("Set Current TCP Client Test are starting...") # Debug
+
 		""" Config Create TCP """
 		config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
 		config_create_tcp_req = ConfigCreateTcp.Request()
@@ -3371,6 +3510,8 @@ class TestDsrTCPCtrlCli(unittest.TestCase):
 	
 	# Get Current TCP Test
 	def test_get_current_tcp_cli(self):
+		print("Get Current TCP Client Test are starting...") # Debug
+
 		""" Config Create TCP """
 		config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
 		config_create_tcp_req = ConfigCreateTcp.Request()
@@ -3410,6 +3551,8 @@ class TestDsrTCPCtrlCli(unittest.TestCase):
 
 	# Configure Delete TCP Test
 	def test_config_delete_tcp_cli(self):
+		print("Delete TCP Configuration Client Test are starting...") # Debug
+
 		""" Config Create TCP """
 		config_create_tcp_cli = self.node.create_client(ConfigCreateTcp, "tcp/config_create_tcp")
 		config_create_tcp_req = ConfigCreateTcp.Request()
@@ -3462,4 +3605,3 @@ class TestDsrTCPCtrlCli(unittest.TestCase):
 
 if __name__ == '__main__':
 	unittest.main()
-	rclpy.shutdown()
