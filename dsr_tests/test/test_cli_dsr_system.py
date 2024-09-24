@@ -5,6 +5,7 @@ import rclpy
 import threading
 import time
 from dsr_msgs2.srv import *
+import rclpy.duration
 from std_msgs.msg import Float64MultiArray, MultiArrayDimension
 import rclpy.type_support
 
@@ -282,6 +283,10 @@ class TestDsrMoveCli(unittest.TestCase):
 		self.node.destroy_client(home_cli)
 
 		""" Check Event !!""" 
+		start_time = self.node.get_clock.now()
+		duration = rclpy.duration.Duration(seconds=10)
+
+		# while (self.node.get_clock.now() - start_time) < duration : 
 
 		""" Current Pose """
 		cur_cli = self.node.create_client(GetCurrentPose, "system/get_current_pose")
