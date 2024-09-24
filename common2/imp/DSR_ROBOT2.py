@@ -581,6 +581,9 @@ def set_robot_mode(robot_mode):
         req.robot_mode = robot_mode
 
         #ret = 0 if (srv.success == True) else -1
+        while not _ros2_set_robot_mode.wait_for_service(timeout_sec=1.0):
+            g_node.get_logger().info("Set Robot Mode Service is not available, waiting for service to becom available...")
+
         future = _ros2_set_robot_mode.call_async(req)
         rclpy.spin_until_future_complete(g_node, future)
 
@@ -1505,7 +1508,7 @@ def _movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, 
 
         #RRR ret = 0 if (srv.success == True) else -1
         while not _ros2_movej.wait_for_service(timeout_sec=1.0):
-            g_node.get_logger().info("Service is not available, waiting for service to becom available...")
+            g_node.get_logger().info("MoveJ Service is not available, waiting for service to becom available...")
         
         future = _ros2_movej.call_async(req)
         rclpy.spin_until_future_complete(g_node, future)
@@ -1658,6 +1661,9 @@ def _movejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_M
 
         #ret = srv.success
         #ret = 0 if (srv.success == True) else -1
+        while not _ros2_movejx.wait_for_service(timeout_sec=1.0):
+            g_node.get_logger().info("MoveJx Service is not available, waiting for service to becom available...")
+
         future = _ros2_movejx.call_async(req)
         rclpy.spin_until_future_complete(g_node, future)
 

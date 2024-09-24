@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
                 'dance = dsr_example2.demo.dance_m1013:main',
+                'single_robot_simple = dsr_example2.simple.single_robot_simple:main',
         ],
     },
 )
