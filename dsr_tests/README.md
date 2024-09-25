@@ -13,19 +13,6 @@
 <li> Use Python Unittest Framwork </li>
 <li> DSR ROS 2 Package Setting </li>
 <h2> Build instructions </h2>
-<h3> DSR ROS 2 common2 package install </h3>
-Add bellow code to common2 CMakeLists.txt
-<pre><code>
-  install(DIRECTORY imp DESTINATION lib/${PROJECT_NAME}
-  FILES_MATCHING PATTERN "*.py"
-  PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
-  )
-</code></pre>
-<h3> Edit .bashrc </h3>
-Add Python Path for DSR module
-<pre><code>
-  export PYTHONPATH=$PYTHONPATH:~/ros2_ws/install/common2/lib/common2/imp
-</code></pre>
 <h3> Build </h3>
 Build dsr_tests package
 <pre><code>
