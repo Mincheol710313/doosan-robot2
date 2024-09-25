@@ -26,5 +26,16 @@ Add Python Path for DSR module
 <pre><code>
   export PYTHONPATH=$PYTHONPATH:~/ros2_ws/install/common2/lib/common2/imp
 </code></pre>
-
+<h3> Build </h3>
+Build dsr_tests package
+<pre><code>
+  cd ros2_ws
+  colcon build --packages-select dsr_tests
+</code></pre>
+<h3> Test </h3>
+colcon test to dsr_tests
+<pre><code>
+  colcon test 
+</code></pre>
+if you want to know about colcon test command, use <code>--help</code> command option.
 
