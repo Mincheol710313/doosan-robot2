@@ -24,10 +24,13 @@ colcon build --packages-select example</code></pre>
 <h3> Run Dance Example </h3>
 <pre><code>ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=virtual host:=127.0.0.1 port:=12345 model:=m1013
 ros2 run example dance</code></pre>
-[Screencast from 2024년 09월 26일 13시 20분 42초.webm](https://github.com/user-attachments/assets/3e357ce0-cf7f-4029-bfed-04c9a42c50b9)
-
+<video width="640" height="480" controls autoplay loop muted>
+  <source src="https://youtu.be/SZjQWmF9O0g"></source>
+</video>
 <h4> Run Simple Example </h4>
 <pre><code>ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=virtual host:=127.0.0.1 port:=12345 model:=m1013
 ros2 run example single_robot_simple
 </code></pre>
-[Screencast from 2024년 09월 26일 13시 21분 53초.webm](https://github.com/user-attachments/assets/07a3e4f1-7d85-4f76-b729-19e7d0ec1d83)
+<video width="640" height="480" controls autoplay loop muted>
+  <source src="https://youtu.be/SZjQWmF9O0g"></source>
+</video>
