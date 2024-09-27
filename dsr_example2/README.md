@@ -23,7 +23,7 @@ Add the following code to `common2/CMakeLists.txt`:
 install(DIRECTORY imp DESTINATION lib/${PROJECT_NAME}
 FILES_MATCHING PATTERN "*.py"
 PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
-)
+)'''
 
 ## Edit .bashrc
 Add Python Path for DSR module:
