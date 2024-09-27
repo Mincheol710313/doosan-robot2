@@ -32,9 +32,25 @@ Add Python Path for DSR module:
 export PYTHONPATH=$PYTHONPATH:~/ros2_ws/install/common2/lib/common2/imp
 ```
 
-## Build
+### Build
 Build example package:
 ```shell
 cd ros2_ws
 colcon build --packages-select example
 ```
+
+### Run Dance Example
+```shell
+ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=virtual host:=127.0.0.1 port:=12345 model:=m1013
+ros2 run example dance
+```
+
+
+
+### Run Single Robot Simple Example
+```shell
+ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=virtual host:=127.0.0.1 port:=12345 model:=m1013
+ros2 run example single_robot_simple
+```
+
+
