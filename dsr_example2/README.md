@@ -1,7 +1,7 @@
 <!-- DSR Test Package Description -->
 <h1> DSR ROS 2 Example Package </h1>
 <h2> Description </h2>
-A simple example package for using a Doosan Robot with the DSR ROS 2 <pre><code>common2</code></pre> Python package.
+A simple example package for using a Doosan Robot with the DSR ROS 2 <code>common2</code> Python package.
 <li> dance example : Example using various motion services(movej, movel, moveb, etc..) </li>
 <li> single_robot_simple example : Example using movej motion serivces </li>
 <h2> Requirements </h2>
