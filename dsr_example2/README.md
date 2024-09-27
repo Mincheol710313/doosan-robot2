@@ -45,6 +45,7 @@ ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=virtual host:=127.0.0
 ros2 run example dance
 ```
 
+[Screencast from 2024년 09월 26일 13시 20분 42초.webm](https://github.com/user-attachments/assets/77d19bef-8443-497a-bea8-1115339c0bd6)
 
 
 ### Run Single Robot Simple Example
@@ -53,4 +54,5 @@ ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=virtual host:=127.0.0
 ros2 run example single_robot_simple
 ```
 
+[Screencast from 2024년 09월 26일 13시 21분 53초.webm](https://github.com/user-attachments/assets/c9b19447-0f7e-42b2-824a-a744db24079e)
 
