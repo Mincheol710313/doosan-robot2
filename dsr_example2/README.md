@@ -23,15 +23,18 @@ Add the following code to `common2/CMakeLists.txt`:
 install(DIRECTORY imp DESTINATION lib/${PROJECT_NAME}
 FILES_MATCHING PATTERN "*.py"
 PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
-)'''
+)
+'''
 
-## Edit .bashrc
+### Edit .bashrc
 Add Python Path for DSR module:
-'''text
+```bash
 export PYTHONPATH=$PYTHONPATH:~/ros2_ws/install/common2/lib/common2/imp
+'''
 
 ## Build
 Build example package:
 '''shell
 cd ros2_ws
 colcon build --packages-select example
+'''
