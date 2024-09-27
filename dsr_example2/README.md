@@ -24,17 +24,17 @@ install(DIRECTORY imp DESTINATION lib/${PROJECT_NAME}
 FILES_MATCHING PATTERN "*.py"
 PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
 )
-'''
+```
 
 ### Edit .bashrc
 Add Python Path for DSR module:
 ```bash
 export PYTHONPATH=$PYTHONPATH:~/ros2_ws/install/common2/lib/common2/imp
-'''
+```
 
 ## Build
 Build example package:
-'''shell
+```shell
 cd ros2_ws
 colcon build --packages-select example
-'''
+```
